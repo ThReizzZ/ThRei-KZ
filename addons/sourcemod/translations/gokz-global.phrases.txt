@@ -1,0 +1,333 @@
+"Phrases"
+{
+	// =====[ CHAT MESSAGES ]=====
+	"No Global Times Found"
+	{
+		"en"		"{grey}No ThRei times were found!"
+		"chi"		"{grey}本图暂未发现ThRei纪录!"
+		"ru"		"{grey}Никаких глобальных рекордов не найдено!"
+	}
+	"No Global Times Found (PRO)"
+	{
+		"en"		"{grey}No ThRei {blue}PRO{grey} times were found!"
+		"chi"		"{grey}本图暂未发现{blue}裸跳{grey}纪录!"
+		"ru"		"{grey}Глобальное {blue}PRO{grey} время не найдено!"
+	}
+	"New Global Top Time (NUB)"
+	{
+		// linus is now #2 in the THREI NUB TOP [SKZ]
+		"#format"	"{1:N},{2:d},{3:s}"
+		"en"		"{lime}{1}{grey} is now #{default}{2} {grey}in the {red}THREI NUB TOP {grey}[{purple}{3}{grey}]"
+		"chi"		"{lime}{1}{grey} 现在成为了{red}ThRei前{grey}[{purple}{3}{grey}]名存点纪录中的第{default}{2}{grey}名"
+		"ru"		"{lime}{1}{grey} теперь #{default}{2} {grey}в {red}THREI NUB TOP {grey}[{purple}{3}{grey}]"
+	}
+	"New Global Top Time (PRO)"
+	{
+		// linus is now #2 in the THREI PRO TOP [SKZ]
+		"#format"	"{1:N},{2:d},{3:s}"
+		"en"		"{lime}{1}{grey} is now #{default}{2} {grey}in the {darkred}THREI PRO TOP {grey}[{purple}{3}{grey}]"
+		"chi"		"{lime}{1}{grey} 现在成为了{darkred}ThRei前{grey}[{purple}{3}{grey}]名裸跳纪录中的第{default}{2}{grey}名"
+		"ru"		"{lime}{1}{grey} теперь #{default}{2} {grey}в {darkred}THREI PRO TOP {grey}[{purple}{3}{grey}]"
+	}
+	"New Global Top Bonus Time (NUB)"
+	{
+		// linus is now #2 in the Bonus 1 THREI NUB TOP [SKZ]
+		"#format"	"{1:N},{2:d},{3:d},{4:s}"
+		"en"		"{lime}{1}{grey} is now #{default}{2} {grey}in the {bluegrey}Bonus {3} {red}THREI NUB TOP {grey}[{purple}{4}{grey}]"
+		"chi"		"{lime}{1}{grey} 现在成为了{bluegrey}加成{3}阶{red}下ThRei前{grey}[{purple}{4}{grey}名的读点纪录中的第{default}{2}{grey}名"
+		"ru"		"{lime}{1}{grey} теперь #{default}{2} {grey}в {bluegrey}Bonus {3} {red}THREI NUB TOP {grey}[{purple}{4}{grey}]"
+	}
+	"New Global Top Bonus Time (PRO)"
+	{
+		// linus is now #2 in the Bonus 1 THREI PRO TOP [SKZ]
+		"#format"	"{1:N},{2:d},{3:d},{4:s}"
+		"en"		"{lime}{1}{grey} is now #{default}{2} {grey}in the {bluegrey}Bonus {3} {darkred}THREI PRO TOP {grey}[{purple}{4}{grey}]"
+		"chi"		"{lime}{1}{grey} 现在成为了{bluegrey}加成{3}阶{darkred}下ThRei前{grey}[{purple}{4}{grey}名的第#{default}{2}{grey}名"
+		"ru"		"{lime}{1}{grey} теперь #{default}{2} {grey}в {bluegrey}Bonus {3} {darkred}THREI PRO TOP {grey}[{purple}{4}{grey}]"
+	}
+	"New Global Record (NUB)"
+	{
+		// Bill set a new THREI NUB RECORD [Mode]
+		"#format"	"{1:N},{2:s}"
+		"en"		"{lime}{1}{grey} set a new {red}THREI NUB RECORD {grey}[{purple}{2}{grey}]"
+		"chi"		"{lime}{1}{grey} 刷新了{red}存点ThRei纪录: {grey}[{purple}{2}{grey}]"
+		"ru"		"{lime}{1}{grey} поставил новый рекорд в {red}THREI NUB {grey}[{purple}{2}{grey}]"
+	}
+	"New Global Record (PRO)"
+	{
+		// Bill set a new THREI PRO RECORD [Mode]
+		"#format"	"{1:N},{2:s}"
+		"en"		"{lime}{1}{grey} set a new {darkred}THREI PRO RECORD {grey}[{purple}{2}{grey}]"
+		"chi"		"{lime}{1}{grey} 刷新了{darkred}裸跳ThRei纪录: {grey}[{purple}{2}{grey}]"
+		"ru"		"{lime}{1}{grey} поставил новый рекорд в {darkred}THREI PRO {grey}[{purple}{2}{grey}]"
+	}
+	"New Global Bonus Record (NUB)"
+	{
+		// Bill set a new Bonus 1 THREI NUB RECORD [Mode]
+		"#format"	"{1:N},{2:d},{3:s}"
+		"en"		"{lime}{1}{grey} set a new {bluegrey}Bonus {2} {red}THREI NUB RECORD {grey}[{purple}{3}{grey}]"
+		"chi"		"{lime}{1}{grey} 刷新了{bluegrey}加成{2}阶下的{darkred}存点ThRei纪录: {grey}[{purple}{3}{grey}]"
+		"ru"		"{lime}{1}{grey} поставил новый рекорд в {bluegrey}Bonus {2} {red}THREI NUB {grey}[{purple}{3}{grey}]"
+	}
+	"New Global Bonus Record (PRO)"
+	{
+		// Bill set a new Bonus 1 THREI PRO RECORD [Mode]
+		"#format"	"{1:N},{2:d},{3:s}"
+		"en"		"{lime}{1}{grey} set a new {bluegrey}Bonus {2} {darkred}THREI PRO RECORD {grey}[{purple}{3}{grey}]"
+		"chi"		"{lime}{1}{grey} 刷新了{bluegrey}加成{2}阶下的{darkred}裸跳ThRei纪录: {grey}[{purple}{3}{grey}]"
+		"ru"		"{lime}{1}{grey} поставил новый рекорд в {bluegrey}Bonus {2} {darkred}THREI PRO {grey}[{purple}{3}{grey}]"
+	}
+	"GPB Header"
+	{
+		// ThRei PB on kz_map [SKZ]
+		"#format"	"{1:s},{2:s}"
+		"en"		"{grey}ThRei PB on {default}{1} {grey}[{purple}{2}{grey}]"
+		"chi"		"{grey}ThRei个人在 {default}{1} {grey}[{purple}{2}{grey}] 的记录"
+	}
+	"GPB Header (Bonus)"
+	{
+		// ThRei PB on kz_map Bonus 1 [SKZ]
+		"#format"	"{1:s},{2:d},{3:s}"
+		"en"		"{grey}ThRei PB on {default}{1} {bluegrey}Bonus {2} {grey}[{purple}{3}{grey}]"
+	}
+	"GPB Time - NUB"
+	{
+		// THREI NUB PB: 01:23.45
+		"#format"	"{1:s}"
+		"en"		"{red}THREI NUB PB{grey}: {default}{1}"
+		"chi"		"{red}ThRei存点记录{grey}: {default}{1}"
+	}
+	"GPB Time - PRO"
+	{
+		// THREI PRO PB: 01:23.45
+		"#format"	"{1:s}"
+		"en"		"{darkred}THREI PRO PB{grey}: {default}{1}"
+		"chi"		"{darkred}ThRei裸跳记录{grey}: {default}{1}"
+	}
+	"GPB Time - No PRO Time"
+	{
+		"en"		"{darkred}THREI PRO PB{grey}: None... yet."
+		"chi"		"{darkred}ThRei裸跳记录{grey}: 你尚未完成此地图."
+	}
+	"GWR Header"
+	{
+		// ThRei Records on kz_map [SKZ]
+		"#format"	"{1:s},{2:s}"
+		"en"		"{grey}ThRei Records on {default}{1} {grey}[{purple}{2}{grey}]"
+		"chi"		"{grey}地图 {default}{1}{grey}的ThRei纪录:[{purple}{2}{grey}]"
+		"ru"		"{grey}Глобальные рекорды на {default}{1} {grey}[{purple}{2}{grey}]"
+	}
+	"GWR Header (Bonus)"
+	{
+		// ThRei Records on kz_map Bonus 1 [SKZ]
+		"#format"	"{1:s},{2:d},{3:s}"
+		"en"		"{grey}ThRei Records on {default}{1} {bluegrey}Bonus {2} {grey}[{purple}{3}{grey}]"
+		"chi"		"{grey}地图 {default}{1}{bluegrey}在加成{2}阶下{grey}的ThRei纪录:[{purple}{3}{grey}]"
+		"ru"		"{grey}Глобальные рекорды на {default}{1} {bluegrey}Bonus {2} {grey}[{purple}{3}{grey}]"
+	}
+	"GWR Time - NUB"
+	{
+		// THREI NUB RECORD: 01:23.45 by linus
+		"#format"	"{1:s},{2:s}"
+		"en"		"{red}THREI NUB RECORD{grey}: {default}{1}{grey} by {lime}{2}"
+		"chi"		"{red}存点ThRei纪录{grey}: {default}{1}{grey} ,纪录保持者:{lime}{2}"
+		"ru"		"{red}THREI NUB RECORD{grey}: {default}{1}{grey} принадлежит {lime}{2}"
+	}
+	"GWR Time - PRO"
+	{
+		// THREI PRO RECORD: 01:23.45 by linus
+		"#format"	"{1:s},{2:s}"
+		"en"		"{darkred}THREI PRO RECORD{grey}: {default}{1}{grey} by {lime}{2}"
+		"chi"		"{darkred}裸跳ThRei纪录{grey}: {default}{1}{grey} ,纪录保持者:{lime}{2}"
+		"ru"		"{red}THREI PRO RECORD{grey}: принадлежит {lime}{2} {grey}с временем {default}{1}"
+	}
+	"GWR Time - No PRO Time"
+	{
+		"en"		"{darkred}THREI PRO RECORD{grey}: None... yet."
+		"chi"		"{darkred}裸跳ThRei纪录{grey}: 暂无"
+		"ru"		"{darkred}THREI PRO RECORD{grey}: Пока... его нет."
+	}
+	"Map Tier"
+	{
+		// kz_map - Tier 3
+		"#format"	"{1:s},{2:d}"
+		"en"		"{default}{1} {grey}- {yellow}Tier {2}"
+		"chi"		"{default}{1} {grey}- {yellow}第{2}阶"
+		"ru"		"{default}{1} {grey}- {yellow}Tier {2}"
+	}
+	"Map Tier (Unknown)"
+	{
+		// kz_map - Tier Unknown
+		"#format"	"{1:s}"
+		"en"		"{default}{1} {grey}- {yellow}Tier Unknown"
+		"chi"		"{default}{1} {grey}- {yellow}未知阶层"
+		"ru"		"{default}{1} {grey}- {yellow}Tier Неизвестен"
+	}
+	"Total Points"
+	{
+		// Total points - PRO: 14000 | NUB: 56000
+		"#format"	"{1:d},{2:d}"
+		"en"		"{default}Total points: {blue}PRO{default}: {1} {yellow}NUB{default}: {2}"
+	}
+	"Map Points"
+	{
+		// Map points - PRO: 560 | NUB: 850
+		"#format"	"{1:d},{2:d}"
+		"en"		"{default}Map points: {blue}PRO{default}: {1} {yellow}NUB{default}: {2}"
+	}
+	"Global Check Header"
+	{
+		"en"		"{grey}ThRei Records Availability Check"
+		"chi"		"{grey}ThRei 可用性检测"
+		"ru"		"{grey}Наличие глобальных рекордов"
+	}
+	"Global Check"
+	{
+		// API Key X | Settings Enforcer X | Map X | You X
+		"#format"	"{1:s},{2:s},{3:s},{4:s},{5:s}"
+		"en"		"{grey}API Key {1}{grey} | Plugins {2}{grey} | Settings Enforcer {3}{grey} | Map {4}{grey} | You {5}"
+		"chi"		"{grey}API密钥 {1}{grey} | 插件 {2}{grey} | Settings Enforcer {3}{grey} | 地图 {4}{grey} | 你 {5}"
+		"ru"		"{grey}Ключ API {1}{grey} | Плагины {2}{grey} | Настройки Enforcer {3}{grey} | Карта {4}{grey} | Ты {5}"
+	}
+	"Kick Player fps_max"
+	{
+		"en"		"Please set your fps_max to more than 120 to continue playing on this server"
+		"chi"		"请将你的 fps_max 设置为 120 以上以继续在此服务器游玩"
+		"ru"		"Пожалуйста, поставьте значение fps_max выше 120 для продолжения игры на данном сервере"
+	}
+	"Warn Player fps_max"
+	{
+		"en"		"{darkred} Please set your fps_max above 120 to continue playing. You will be kicked unless you change it!"
+		"chi"		"{darkred}  请将你的 fps_max 设置为 120 以上以继续在此服务器游玩. 否则你将会被踢出服务器!"
+		"ru"		"{darkred} Пожалуйста, поставьте значение fps_max выше 120 для продолжения игры, иначе вы будете кикнуты."
+	}
+	"Kick Player m_yaw"
+	{
+		"en"		"Your m_yaw value must be less or equal to 0.3 to play on this server"
+		"chi"		"你的 m_yaw 值必须小于或等于 0.3 才能在此服务器上游玩"
+		"ru"		"Ваше значение m_yaw должно быть меньше или равно 0.3 для игры на этом сервере."
+	}
+	"Warn Player Not Global Run"
+	{
+		"en"		"{yellow}Warning{grey}: The current map did not pass the ThRei check. ThRei times will not save. See {default}!globalcheck{grey} for more information."
+		"chi"		"{yellow}警告{grey}: 当前地图并未通过ThRei检查，记录将不会上传，使用 {default}!gc{grey} 指令查看详情."
+	}
+	"Warn Player No Filter Main"
+	{
+		// Warning: SKZ mode is not allowed on the main course. ThRei times will not save.
+		"#format"	"{1:s}"
+		"en"		"{yellow}Warning{grey}: {purple}{1}{grey} mode is not allowed on the {default}main course{grey}. ThRei times will not save. See {default}!filtercheck{grey} for more information."
+	}
+	"Warn Player No Filter Bonus"
+	{
+		// Warning: SKZ mode is not allowed on Bonus 1. ThRei times will not save.
+		"#format"	"{1:s},{2:d}"
+		"en"		"{yellow}Warning{grey}: {purple}{1}{grey} mode is not allowed on {bluegrey}Bonus {2}{grey}. ThRei times will not save. See {default}!filtercheck{grey} for more information."
+	}
+	"Filter Check Header"
+	{
+		// kz_map course 0 filters:
+		"#format"	"{1:s},{2:d}"
+		"en"		"{default}{1} {grey}course {default}{2} {grey}filters:"
+	}
+	"Filter Check Mode"
+	{
+		// KZTimer: Pro ✓ Nub ✓
+		"#format"	"{1:s},{2:s},{3:s}"
+		"en"		"{purple}{1}{grey}: {blue}PRO {2}{grey} | {yellow}NUB {3}"
+	}
+	"Filter Check - No Map"
+	{
+		"en"		"{grey}Map data is not available yet. Please try again later."
+	}
+	"Filter Check - No Course"
+	{
+		"#format"	"{1:d}"
+		"en"		"{grey}Course {default}{1}{grey} does not exist on this map."
+	}
+	"Filter Check - Failed"
+	{
+		"en"		"{grey}Failed to retrieve filter data from the ThRei API."
+	}
+
+
+	// =====[ THREI TOP MENU ]=====
+	"Global Map Top Mode Menu - Title"
+	{
+		// ThRei Map Top
+		//
+		// Map - kz_map
+		//
+		"#format"	"{1:s}"
+		"en"		"ThRei Map Top\n \nMap - {1}\n "
+		"chi"		"地图ThRei纪录\n \n地图 - {1}\n "
+		"ru"		"Глобальный топ карты\n \nКарта - {1}\n "
+	}
+	"Global Map Top Mode Menu - Title (Bonus)"
+	{
+		// ThRei Map Top
+		//
+		// Map - kz_map (Bonus 1)
+		//
+		"#format"	"{1:s},{2:d}"
+		"en"		"ThRei Map Top\n \nMap - {1} (Bonus {2})\n "
+		"chi"		"地图ThRei纪录\n \n地图 - {1} (加成{2}阶)\n "
+		"ru"		"Глобальный топ карты\n \nКарта - {1} (Бонус {2})\n "
+	}
+	"Global Map Top Menu - Title"
+	{
+		// ThRei Map Top
+		//
+		// Map - kz_map
+		// Mode - Vanilla
+		//
+		"#format"	"{1:s},{2:s}"
+		"en"		"ThRei Map Top\n \nMap - {1}\nMode - {2}\n "
+		"chi"		"地图ThRei纪录\n \n地图 - {1}\n模式 - {2}\n "
+		"ru"		"Глобальный топ карты\n \nКарта - {1}\nРежим - {2}\n "
+	}
+	"Global Map Top Menu - Title (Bonus)"
+	{
+		// ThRei Map Top
+		//
+		// Map - kz_map (Bonus 1)
+		// Mode - Vanilla
+		//
+		"#format"	"{1:s},{2:d},{3:s}"
+		"en"		"ThRei Map Top\n \nMap - {1} (Bonus {2})\nMode - {3}\n "
+		"chi"		"地图ThRei纪录\n \n地图 - {1} (加成{2}阶)\n模式 - {3}\n "
+		"ru"		"Глобальный топ карты\n \nКарта - {1} (Бонус {2})\nРежим - {3}\n "
+	}
+	"Global Map Top Submenu - Title"
+	{
+		// ThRei Top PRO Times
+		//
+		// Map - kz_map
+		// Mode - Vanilla
+		//
+		"#format"	"{1:s},{2:s},{3:s}"
+		"en"		"ThRei Top {1} Times\n \nMap - {2}\nMode - {3}\n "
+		"chi"		"地图 {1} ThRei排名\n \n地图 - {2}\n模式 - {3}\n "
+		"ru"		"Глобальный топ {1} времени\n \nКарта - {2}\nРежим - {3}\n "
+	}
+	"Global Map Top Submenu - Title (Bonus)"
+	{
+		// ThRei Top PRO Times
+		//
+		// Map - kz_map (Bonus 1)
+		// Mode - Vanilla
+		//
+		"#format"	"{1:s},{2:s},{3:d},{4:s}"
+		"en"		"ThRei Top {1} Times\n \nMap - {2} (Bonus {3})\nMode - {4}\n "
+		"chi"		"地图 {1} ThRei排名\n \n地图 - {2} (加成{3}阶)\n模式 - {4}\n "
+		"ru"		"Глобальный топ {1} времени\n \nКарта - {2} (Бонус {3})\nРежим - {4}\n "
+	}
+	"Global Map Top Menu - Top"
+	{
+		// Top PRO
+		"#format"	"{1:s}"
+		"en"		"Top {1}"
+		"chi"		"前 {1} 名"
+		"ru"		"Топ {1}"
+	}
+}

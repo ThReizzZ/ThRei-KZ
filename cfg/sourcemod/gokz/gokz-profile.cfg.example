@@ -1,0 +1,16 @@
+// ThRei scoreboard clan tag format.
+// Placeholders: {cn}, {rank}, {mode}, {mode_short}, {mode_initial}
+//
+// {mode_initial}: V = Vanilla, S = SimpleKZ, K = KZTimer
+// {mode_short}:   VNL / SKZ / KZT (used by the chat tag)
+//
+// CS:GO shows at most 15 clan-tag characters. If the formatted tag is
+// longer, the plugin drops the outer brackets automatically.
+//
+// Default:
+//   [{mode_initial} CN {rank}] -> [K CN Amateur+] / K CN Beginner+
+//
+// Other examples:
+//   {mode_initial} CN {rank}   -> K CN Beginner+ (always fits)
+//   [{mode_short} CN {rank}]   -> [KZT CN Beginner+] (will truncate)
+sm_threi_clan_format "[{mode_initial} CN {rank}]"

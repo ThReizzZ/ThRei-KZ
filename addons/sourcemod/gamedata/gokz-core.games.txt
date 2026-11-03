@@ -1,0 +1,112 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			"CCSGameMovement::CanUnduck"
+			{
+				"signature" "CCSGameMovement::CanUnduck"
+				"callconv" 	"thiscall"
+				"this" 		"address"
+				"return" 	"bool"
+			}
+		}
+
+		"Keys"
+		{
+			"IGameMovement"		"GameMovement001"
+
+			"IServerGameEnts"	"ServerGameEnts001"
+		}
+
+		"Signatures"
+		{
+			"CreateInterface"
+			{
+				"library"		"server"
+				"windows"		"@CreateInterface"
+				"linux"			"@CreateInterface"
+			}
+			"CCSGameMovement::CanUnduck"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x8C\x00\x00\x00\x57\x8B\xF9\x8B\x87\x54\x0E\x00\x00"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x81\xEC\xFC\x00\x00\x00\x8B\x5D\x08\x8B\x83\x54\x0E\x00\x00"
+			}
+		}
+
+		"Offsets"
+		{
+			"ProcessMovement"
+			{
+				"windows"		"1"
+				"linux"			"2"
+			}
+		}
+	}
+
+	"csgo"
+	{
+		"Offsets"
+		{
+			// applies to trigger_vphysics_motion and trigger_wind
+			"CBaseVPhysicsTrigger::PassesTriggerFilters"
+			{
+				"windows"	"200"
+				"linux"		"201"
+			}
+
+			// applies to all other triggers
+			"CBaseTrigger::PassesTriggerFilters"
+			{
+				"windows"	"210"
+				"linux"		"211"
+			}
+
+			"IServerGameEnts::MarkEntitiesAsTouching"
+			{
+				"windows"	"1"
+				"linux"		"2"
+			}
+
+			"CCSTeam::RemovePlayer"
+			{
+				"windows"	"221"
+				"linux"		"222"
+			}
+		}
+	}
+
+	"cstrike"
+	{
+		"Offsets"
+		{
+			// applies to trigger_vphysics_motion and trigger_wind
+			"CBaseVPhysicsTrigger::PassesTriggerFilters"
+			{
+				"windows"	"188"
+				"linux"		"189"
+			}
+
+			// applies to all other triggers
+			"CBaseTrigger::PassesTriggerFilters"
+			{
+				"windows"	"197"
+				"linux"		"198"
+			}
+
+			"IServerGameEnts::MarkEntitiesAsTouching"
+			{
+				"windows"	"2"
+				"linux"		"3"
+			}
+
+			"CCSTeam::RemovePlayer"
+			{
+				"windows"	"221"
+				"linux"		"222"
+			}
+		}
+	}
+}
