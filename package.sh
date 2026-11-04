@@ -15,7 +15,7 @@ cp -a "$DIR/models" "$STAGE/"
 cp -a "$DIR/sound" "$STAGE/"
 cp -a "$DIR/maps" "$STAGE/"
 
-cp "$DIR/INSTALL.md" "$DIR/LICENSE" "$DIR/NOTICE.md" "$STAGE/"
+cp "$DIR/README.md" "$DIR/INSTALL.md" "$DIR/CHANGELOG.md" "$DIR/VERSION" "$DIR/LICENSE" "$DIR/NOTICE.md" "$STAGE/"
 cp "$DIR/install.sh" "$DIR/install.ps1" "$DIR/install.bat" "$STAGE/"
 
 mkdir -p "$DIR/release"
