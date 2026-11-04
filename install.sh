@@ -11,28 +11,23 @@ fi
 PKG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 BACKUP="$TARGET/addons/sourcemod/plugins/disabled/threi-backup-$STAMP"
-mkdir -p "$BACKUP"
+mkdir -p "$BACKUP/plugins" "$BACKUP/gamedata" "$BACKUP/translations" "$BACKUP/cfg"
 
 echo "[ThRei] target: $TARGET"
 echo "[ThRei] backup: $BACKUP"
 
-for file in GlobalAPI.smx gokz-global.smx gokz-profile.smx gokz-localranks.smx; do
-  if [ -f "$TARGET/addons/sourcemod/plugins/$file" ]; then
-    cp -a "$TARGET/addons/sourcemod/plugins/$file" "$BACKUP/"
-  fi
-done
+# Back up all current GOKZ files before replacing the whole stack.
+find "$TARGET/addons/sourcemod/plugins" -maxdepth 1 -type f -name '*.smx' -exec cp -a {} "$BACKUP/plugins/" \; 2>/dev/null || true
+find "$TARGET/addons/sourcemod/gamedata" -maxdepth 1 -type f -exec cp -a {} "$BACKUP/gamedata/" \; 2>/dev/null || true
+find "$TARGET/addons/sourcemod/translations" -maxdepth 1 -type f -name '*.txt' -exec cp -a {} "$BACKUP/translations/" \; 2>/dev/null || true
+if [ -d "$TARGET/cfg/sourcemod/gokz" ]; then
+  cp -a "$TARGET/cfg/sourcemod/gokz" "$BACKUP/cfg/"
+fi
 
-for file in gokz-global.phrases.txt gokz-localranks.phrases.txt; do
-  if [ -f "$TARGET/addons/sourcemod/translations/$file" ]; then
-    cp -a "$TARGET/addons/sourcemod/translations/$file" "$BACKUP/"
-  fi
-done
-
-# These old plugins have different filenames, so extracting the package cannot
-# remove them. Move them out of plugins/ so they do not run next to the new bridge.
+# These old plugins have different filenames, so extraction cannot remove them.
 for file in GlobalAPI-Core.smx GlobalAPI-Jumpstats.smx; do
   if [ -f "$TARGET/addons/sourcemod/plugins/$file" ]; then
-    mv "$TARGET/addons/sourcemod/plugins/$file" "$BACKUP/"
+    mv "$TARGET/addons/sourcemod/plugins/$file" "$BACKUP/plugins/"
     echo "[ThRei] disabled old plugin: $file"
   fi
 done
@@ -40,7 +35,7 @@ done
 # GOKZ uploads directly now. Keeping the uploader loaded would upload the same
 # run twice with different client run IDs.
 if [ -f "$TARGET/addons/sourcemod/plugins/threi-kz-uploader.smx" ]; then
-  mv "$TARGET/addons/sourcemod/plugins/threi-kz-uploader.smx" "$BACKUP/"
+  mv "$TARGET/addons/sourcemod/plugins/threi-kz-uploader.smx" "$BACKUP/plugins/"
   echo "[ThRei] disabled uploader: threi-kz-uploader.smx (use it only for manual backfill)"
 fi
 

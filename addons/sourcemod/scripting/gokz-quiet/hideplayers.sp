@@ -123,22 +123,7 @@ static void RequestFrame_WeaponSound(DataPack dp)
 	dp.ReadCellArray(newClients, newTotal);
 	int flags = dp.ReadCell();
 
-	// Recipients may have left since the previous frame.
-	int total = 0;
-	for (int i = 0; i < newTotal; i++)
-	{
-		if (IsClientInGame(newClients[i]))
-		{
-			newClients[total++] = newClients[i];
-		}
-	}
-	if (total == 0)
-	{
-		delete dp;
-		return;
-	}
-
-	Protobuf newMsg = view_as<Protobuf>(StartMessageEx(msg_id, newClients, total, flags));
+	Protobuf newMsg = view_as<Protobuf>(StartMessageEx(msg_id, newClients, newTotal, flags));
 
 	newMsg.SetInt("entidx", dp.ReadCell());
 	newMsg.SetFloat("origin_x", dp.ReadFloat());

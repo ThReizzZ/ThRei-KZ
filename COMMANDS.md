@@ -168,13 +168,3 @@ Many of these commands return results for your currently selected mode.
 ### gokz-localranks
 
  * `!updatemappool` - Update the ranked map pool with the list of maps in cfg/sourcemod/gokz/gokz-localranks-mappool.cfg.
-
-### ThRei
-
- * `!gc` / `!globalcheck` - Show ThRei API/map/mode status.
- * `!gpb` - Show your ThRei global PB.
- * `!gr` / `!gwr` - Show ThRei global records.
- * `!gmaptop` - Open the ThRei map top menu.
- * `!profile` / `!p` - Show ThRei profile, points and rank.
- * `!pb` - Show local PB and ThRei PB.
- * `!wr` - Show local records and ThRei records.

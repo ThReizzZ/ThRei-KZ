@@ -14,40 +14,35 @@ if (-not (Test-Path $SourceMod)) {
 $Package = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $Backup = Join-Path $SourceMod "plugins\disabled\threi-backup-$Stamp"
-New-Item -ItemType Directory -Force -Path $Backup | Out-Null
+foreach ($sub in @("plugins", "gamedata", "translations", "cfg")) {
+    New-Item -ItemType Directory -Force -Path (Join-Path $Backup $sub) | Out-Null
+}
 
 Write-Host "[ThRei] target: $Target"
 Write-Host "[ThRei] backup: $Backup"
 
-$plugins = @(
-    "GlobalAPI.smx",
-    "gokz-global.smx",
-    "gokz-profile.smx",
-    "gokz-localranks.smx"
-)
-foreach ($file in $plugins) {
-    $path = Join-Path $SourceMod "plugins\$file"
-    if (Test-Path $path) {
-        Copy-Item $path $Backup -Force
+# Back up all current GOKZ files before replacing the whole stack.
+$sourceModDirs = @{
+    "plugins" = "plugins"
+    "gamedata" = "gamedata"
+    "translations" = "translations"
+}
+foreach ($name in $sourceModDirs.Keys) {
+    $src = Join-Path $SourceMod $sourceModDirs[$name]
+    if (Test-Path $src) {
+        Get-ChildItem $src -File | Copy-Item -Destination (Join-Path $Backup $name) -Force
     }
 }
-
-$translations = @(
-    "gokz-global.phrases.txt",
-    "gokz-localranks.phrases.txt"
-)
-foreach ($file in $translations) {
-    $path = Join-Path $SourceMod "translations\$file"
-    if (Test-Path $path) {
-        Copy-Item $path $Backup -Force
-    }
+$targetGokzCfg = Join-Path $Target "cfg\sourcemod\gokz"
+if (Test-Path $targetGokzCfg) {
+    Copy-Item $targetGokzCfg (Join-Path $Backup "cfg") -Recurse -Force
 }
 
 # Old plugins have different filenames, so extraction cannot remove them.
 foreach ($file in @("GlobalAPI-Core.smx", "GlobalAPI-Jumpstats.smx")) {
     $path = Join-Path $SourceMod "plugins\$file"
     if (Test-Path $path) {
-        Move-Item $path $Backup -Force
+        Move-Item $path (Join-Path $Backup "plugins") -Force
         Write-Host "[ThRei] disabled old plugin: $file"
     }
 }
@@ -55,7 +50,7 @@ foreach ($file in @("GlobalAPI-Core.smx", "GlobalAPI-Jumpstats.smx")) {
 # GOKZ uploads directly now. Keeping the uploader loaded would duplicate runs.
 $uploader = Join-Path $SourceMod "plugins\threi-kz-uploader.smx"
 if (Test-Path $uploader) {
-    Move-Item $uploader $Backup -Force
+    Move-Item $uploader (Join-Path $Backup "plugins") -Force
     Write-Host "[ThRei] disabled uploader: threi-kz-uploader.smx (use it only for manual backfill)"
 }
 
@@ -71,11 +66,10 @@ foreach ($dir in @("materials", "models", "sound", "maps")) {
     }
 }
 
-$gokzCfg = Join-Path $Package "cfg\sourcemod\gokz"
-if (Test-Path $gokzCfg) {
-    $dst = Join-Path $Target "cfg\sourcemod\gokz"
-    New-Item -ItemType Directory -Force -Path $dst | Out-Null
-    Copy-Item (Join-Path $gokzCfg "*") $dst -Recurse -Force
+$pkgGokzCfg = Join-Path $Package "cfg\sourcemod\gokz"
+if (Test-Path $pkgGokzCfg) {
+    New-Item -ItemType Directory -Force -Path $targetGokzCfg | Out-Null
+    Copy-Item (Join-Path $pkgGokzCfg "*") $targetGokzCfg -Recurse -Force
 }
 
 $convarsExample = Join-Path $Package "cfg\sourcemod\globalapi-convars.cfg.example"

@@ -1,6 +1,9 @@
 // ====================== DEFINITIONS ======================== //
 
 #define DATA_DIR "data/GlobalAPI"
+#define CONFIG_DIR "cfg/sourcemod/GlobalAPI"
+
+#define APIKEY_PATH "cfg/sourcemod/GlobalAPI/GlobalAPI-key.cfg"
 
 // =========================================================== //
 
@@ -47,80 +50,79 @@ int gI_mapFilesize = -1;
 
 public Plugin myinfo =
 {
-    name = "ThRei GlobalAPI (GOKZ compatibility)",
-    author = "The KZ Global Team / ThRei",
-    description = "GlobalAPI-compatible bridge to the ThRei KZ API",
-    version = GlobalAPI_Plugin_Version,
-    url = "https://threi.cn"
+	name = "GlobalAPI",
+	author = "The KZ Global Team",
+	description = GlobalAPI_Plugin_Desc,
+	version = GlobalAPI_Plugin_Version,
+	url = GlobalAPI_Plugin_Url
 };
 
 // ======================= MAIN CODE ========================= //
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-    RegPluginLibrary("GlobalAPI");
+	RegPluginLibrary("GlobalAPI");
 
-    CreateConvars();
-    CreateNatives();
-    CreateForwards();
-    CreateCommands();
+	CreateConvars();
+	CreateNatives();
+	CreateForwards();
+	CreateCommands();
 
-    char dataDir[PLATFORM_MAX_PATH];
-    BuildPath(Path_SM, dataDir, sizeof(dataDir), "%s", DATA_DIR);
+	char dataDir[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, dataDir, sizeof(dataDir), "%s", DATA_DIR);
+	if (!DirExists(dataDir))
+	{
+		CreateDirectory(dataDir, 511);
+	}
 
-    if (!DirExists(dataDir))
-    {
-        CreateDirectory(dataDir, 511);
-    }
-
-    // TODO: Create empty apikey file?
-    return APLRes_Success;
+	// TODO: Create empty apikey file?
+	return APLRes_Success;
 }
 
 public void OnPluginStart()
 {
-    ConVar metamodCvar = FindConVar("metamod_version");
-    metamodCvar.GetString(gC_MetamodVersion, sizeof(gC_MetamodVersion));
+	ConVar metamodCvar = FindConVar("metamod_version");
+	metamodCvar.GetString(gC_MetamodVersion, sizeof(gC_MetamodVersion));
 
-    ConVar sourcemodCvar = FindConVar("sourcemod_Version");
-    sourcemodCvar.GetString(gC_SourcemodVersion, sizeof(gC_SourcemodVersion));
+	ConVar sourcemodCvar = FindConVar("sourcemod_Version");
+	sourcemodCvar.GetString(gC_SourcemodVersion, sizeof(gC_SourcemodVersion));
 
-    gB_usingAPIKey = ReadAPIKey();
-    AutoExecConfig(true, "globalapi-convars");
+	gB_usingAPIKey = ReadAPIKey();
+	AutoExecConfig(true, "GlobalAPI", "sourcemod/GlobalAPI");
 }
 
 public void OnMapStart()
 {
-    GetMapDisplay(gC_mapName, sizeof(gC_mapName));
-    GetMapFullPath(gC_mapPath, sizeof(gC_mapPath));
-    gI_mapFilesize = FileSize(gC_mapPath);
+	GetMapDisplay(gC_mapName, sizeof(gC_mapName));
+	GetMapFullPath(gC_mapPath, sizeof(gC_mapPath));
+	gI_mapFilesize = FileSize(gC_mapPath);
 }
 
 public void OnConfigsExecuted()
 {
-    Initialize();
+	Initialize();
 }
 
 public void GlobalAPI_OnRequestStarted(Handle request, GlobalAPIRequestData hData)
 {
-    char requestUrl[GlobalAPI_Max_BaseUrl_Length];
-    hData.GetString("url", requestUrl, sizeof(requestUrl));
+	char requestUrl[GlobalAPI_Max_BaseUrl_Length];
+	hData.GetString("url", requestUrl, sizeof(requestUrl));
 
-    GlobalAPI_DebugMessage("HTTP Request to \"%s\" started!", requestUrl);
+	GlobalAPI_DebugMessage("HTTP Request to \"%s\" started!", requestUrl);
 }
 
 public void GlobalAPI_OnRequestFailed(Handle request, GlobalAPIRequestData hData)
 {
-    char requestUrl[GlobalAPI_Max_BaseUrl_Length];
-    hData.GetString("url", requestUrl, sizeof(requestUrl));
+	char requestUrl[GlobalAPI_Max_BaseUrl_Length];
+	hData.GetString("url", requestUrl, sizeof(requestUrl));
 
-    GlobalAPI_DebugMessage("HTTP Request to \"%s\" failed! - Status: %d", requestUrl, hData.Status);
+	GlobalAPI_DebugMessage("HTTP Request to \"%s\" failed! - Status: %d", requestUrl, hData.Status);
 }
 
 public void GlobalAPI_OnRequestFinished(Handle request, GlobalAPIRequestData hData)
 {
-    char requestUrl[GlobalAPI_Max_BaseUrl_Length];
-    hData.GetString("url", requestUrl, sizeof(requestUrl));
+	char requestUrl[GlobalAPI_Max_BaseUrl_Length];
+	hData.GetString("url", requestUrl, sizeof(requestUrl));
 
-    GlobalAPI_DebugMessage("HTTP Request to \"%s\" completed! - Status: %d", requestUrl, hData.Status);
+	GlobalAPI_DebugMessage("HTTP Request to \"%s\" completed! - Status: %d", requestUrl, hData.Status);
 }

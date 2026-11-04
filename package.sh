@@ -5,19 +5,20 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STAGE="$DIR/.release-upgrade"
 
 rm -rf "$STAGE"
-mkdir -p "$STAGE/addons/sourcemod/plugins" "$STAGE/addons/sourcemod/translations" "$STAGE/cfg/sourcemod/gokz" "$STAGE/maps"
+mkdir -p \
+  "$STAGE/addons/sourcemod/plugins" \
+  "$STAGE/addons/sourcemod/gamedata" \
+  "$STAGE/addons/sourcemod/translations" \
+  "$STAGE/cfg/sourcemod/gokz" \
+  "$STAGE/maps"
 
-for file in GlobalAPI.smx gokz-global.smx gokz-profile.smx gokz-localranks.smx; do
-  cp "$DIR/addons/sourcemod/plugins/$file" "$STAGE/addons/sourcemod/plugins/"
-done
-
-for file in gokz-global.phrases.txt gokz-localranks.phrases.txt; do
-  cp "$DIR/addons/sourcemod/translations/$file" "$STAGE/addons/sourcemod/translations/"
-done
+cp "$DIR/addons/sourcemod/plugins/"*.smx "$STAGE/addons/sourcemod/plugins/"
+cp "$DIR/addons/sourcemod/gamedata/"* "$STAGE/addons/sourcemod/gamedata/"
+cp "$DIR/addons/sourcemod/translations/"*.txt "$STAGE/addons/sourcemod/translations/"
 
 cp "$DIR/cfg/sourcemod/globalapi-key.cfg.example" "$STAGE/cfg/sourcemod/"
 cp "$DIR/cfg/sourcemod/globalapi-convars.cfg.example" "$STAGE/cfg/sourcemod/"
-cp "$DIR/cfg/sourcemod/gokz/gokz-profile.cfg.example" "$STAGE/cfg/sourcemod/gokz/"
+cp "$DIR/cfg/sourcemod/gokz/"* "$STAGE/cfg/sourcemod/gokz/"
 cp "$DIR/maps/gokz-replays.nav" "$STAGE/maps/"
 cp "$DIR/INSTALL.md" "$DIR/LICENSE" "$DIR/NOTICE.md" "$STAGE/"
 cp "$DIR/install.sh" "$DIR/install.ps1" "$DIR/install.bat" "$STAGE/"

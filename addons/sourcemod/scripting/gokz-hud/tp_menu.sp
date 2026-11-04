@@ -28,19 +28,10 @@ static bool forceRefresh[MAXPLAYERS + 1];
 
 void OnPlayerRunCmdPost_TPMenu(int client, int cmdnum, HUDInfo info)
 {
-	if (IsTPMenuUpdateTick(client, cmdnum))
+	int updateSpeed = gB_FastUpdateRate[client] ? 3 : 6;
+	if (cmdnum % updateSpeed == 2)
 	{
 		UpdateTPMenu(client, info);
-	}
-}
-
-// A spectator without a target, such as in freecam, may still be controlling the
-// replay bot they were last watching.
-void OnPlayerRunCmdPost_TPMenuNoTarget(int client, int cmdnum)
-{
-	if (gB_GOKZReplays && IsTPMenuUpdateTick(client, cmdnum))
-	{
-		GOKZ_RP_UpdateReplayControlMenu(client);
 	}
 }
 
@@ -110,12 +101,6 @@ void SetForceUpdateTPMenu(int client)
 }
 
 // =====[ PRIVATE ]=====
-
-static bool IsTPMenuUpdateTick(int client, int cmdnum)
-{
-	int updateSpeed = gB_FastUpdateRate[client] ? 3 : 6;
-	return cmdnum % updateSpeed == 2;
-}
 
 static void UpdateTPMenu(int client, HUDInfo info)
 {

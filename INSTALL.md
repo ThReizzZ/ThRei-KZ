@@ -2,14 +2,14 @@
 
 > 安装前请先停服，或至少不要在服务器运行时覆盖/移动 `.smx` 文件。
 
-这套插件让原版 GOKZ 保持全部功能，只把 GlobalAPI 后端换成 ThRei。
+这套插件基于 **GOKZ 3.6.4 + SourceMod 1.11**，保留原版 GOKZ 全部功能，只把 GlobalAPI 后端换成 ThRei。
 
 ## 选择哪个包
 
 - **全新服务器，没有装过 GOKZ**：用 `threi-kz-full.tar.gz`。
   包含所有 GOKZ 插件、GlobalAPI 桥接、翻译、gamedata、cfg、materials、models、sound，以及 `maps/gokz-replays.nav`。
 - **已经装过 GOKZ**：用 `threi-kz-upgrade.tar.gz`。
-  只包含需要替换的四个插件、两个翻译、配置示例和 `maps/gokz-replays.nav`。
+  包含全部 GOKZ 插件、gamedata、翻译、配置和 `maps/gokz-replays.nav`，用于把旧 GOKZ 服务器整体切到 3.6.4 基线。
 
 两个包都可以运行同一个一键安装脚本。
 
@@ -20,17 +20,13 @@
 ## 文件（升级包）
 
 ```text
-addons/sourcemod/plugins/GlobalAPI.smx
-addons/sourcemod/plugins/gokz-global.smx
-addons/sourcemod/plugins/gokz-profile.smx
-addons/sourcemod/plugins/gokz-localranks.smx
+addons/sourcemod/plugins/*.smx
+addons/sourcemod/gamedata/*
+addons/sourcemod/translations/*
 
-addons/sourcemod/translations/gokz-global.phrases.txt
-addons/sourcemod/translations/gokz-localranks.phrases.txt
-
+cfg/sourcemod/gokz/*
 cfg/sourcemod/globalapi-key.cfg.example
 cfg/sourcemod/globalapi-convars.cfg.example
-cfg/sourcemod/gokz/gokz-profile.cfg.example
 
 maps/gokz-replays.nav
 ```
@@ -67,10 +63,10 @@ install.bat
 
 脚本会：
 
-- 备份旧的四个插件和两个翻译到 `plugins/disabled/threi-backup-*`
+- 备份旧的 GOKZ 插件、gamedata、翻译和 cfg 到 `plugins/disabled/threi-backup-*`
 - 停用 `GlobalAPI-Core.smx` / `GlobalAPI-Jumpstats.smx`
 - 停用 `threi-kz-uploader.smx`
-- 复制新的四个插件、两个翻译、配置示例和 `maps/gokz-replays.nav`
+- 复制全部 GOKZ 插件、gamedata、翻译、配置和 `maps/gokz-replays.nav`
 - 如果 `globalapi-key.cfg` 不存在，自动创建
 
 然后编辑：

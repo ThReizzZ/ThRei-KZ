@@ -46,7 +46,6 @@ public Action CommandReplayGoto(int client, int args)
 		default:
 		{
 			GOKZ_PrintToChat(client, true, "%t", "Replay Controls - Invalid Time");
-			GOKZ_PlayErrorSound(client);
 			return Plugin_Handled;
 		}
 	}

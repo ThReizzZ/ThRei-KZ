@@ -37,22 +37,18 @@ methodmap GlobalAPIRequestData < JSON_Object
 		}
 		else
 		{
-			char name[GlobalAPI_Max_PluginName_Length];
-			char version[GlobalAPI_Max_PluginVersion_Length];
-			GetPluginDisplayName(plugin, name, sizeof(name));
-			GetPluginVersion(plugin, version, sizeof(version));
-			requestData.SetString("pluginName", name);
-			requestData.SetString("pluginVersion", version);
+			requestData.SetString("pluginName", GetPluginDisplayName(plugin));
+			requestData.SetString("pluginVersion", GetPluginVersion(plugin));
 		}
 
-		requestData.SetHidden("pluginName", true);
-		requestData.SetHidden("pluginVersion", true);
+		requestData.SetKeyHidden("pluginName", true);
+		requestData.SetKeyHidden("pluginVersion", true);
 
 		requestData.SetInt("acceptType", 0);
-		requestData.SetHidden("acceptType", true);
+		requestData.SetKeyHidden("acceptType", true);
 
 		requestData.SetInt("contentType", 0);
-		requestData.SetHidden("contentType", true);
+		requestData.SetKeyHidden("contentType", true);
 
 		return view_as<GlobalAPIRequestData>(requestData);
 	}
@@ -67,8 +63,8 @@ methodmap GlobalAPIRequestData < JSON_Object
  	*/
 	public void SetDefault(char[] key)
 	{
-		this.SetInt(key, 0);
-		this.SetHidden(key, true);
+		this.SetHandle(key);
+		this.SetKeyHidden(key, true);
 	}
 	
    /**
@@ -80,7 +76,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 	public void AddUrl(char[] url)
 	{
 		this.SetString("url", url);
-		this.SetHidden("url", true);
+		this.SetKeyHidden("url", true);
 	}
 	
    /**
@@ -92,7 +88,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 	public void AddEndpoint(char[] endpoint)
 	{
 		this.SetString("endpoint", endpoint);
-		this.SetHidden("endpoint", true);
+		this.SetKeyHidden("endpoint", true);
 	}
 	
    /**
@@ -105,7 +101,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 	public void AddBodyFile(char[] path)
 	{
 		this.SetString("bodyFile", path);
-		this.SetHidden("bodyFile", true);
+		this.SetKeyHidden("bodyFile", true);
 	}
 
    /**
@@ -118,7 +114,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 	public void AddDataPath(char[] path)
 	{
 		this.SetString("dataFilePath", path);
-		this.SetHidden("dataFilePath", true);
+		this.SetKeyHidden("dataFilePath", true);
 	}
 
     /*
@@ -163,7 +159,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 		public set(bool required)
 		{
 			this.SetBool("keyRequired", required);
-			this.SetHidden("keyRequired", true);
+			this.SetKeyHidden("keyRequired", true);
 		}
 	}
 	
@@ -179,7 +175,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 		public set(bool retried)
 		{
 			this.SetBool("isRetried", retried);
-			this.SetHidden("isRetried", true);
+			this.SetKeyHidden("isRetried", true);
 		}
 	}
 	
@@ -195,7 +191,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 		public set(int length)
 		{
 			this.SetInt("bodyLength", length);
-			this.SetHidden("bodyLength", true);
+			this.SetKeyHidden("bodyLength", true);
 		}
 	}
 
@@ -211,7 +207,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 		public set(int status)
 		{
 			this.SetInt("status", status);
-			this.SetHidden("status", true);
+			this.SetKeyHidden("status", true);
 		}
 	}
 
@@ -227,7 +223,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 		public set(int responseTime)
 		{
 			this.SetInt("responseTime", responseTime);
-			this.SetHidden("responseTime", true);
+			this.SetKeyHidden("responseTime", true);
 		}
 	}
 
@@ -243,7 +239,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 		public set(int type)
 		{
 			this.SetInt("requestType", type);
-			this.SetHidden("requestType", true);
+			this.SetKeyHidden("requestType", true);
 		}
 	}
 
@@ -259,7 +255,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 		public set(bool failure)
 		{
 			this.SetBool("failure", failure);
-			this.SetHidden("failure", true);
+			this.SetKeyHidden("failure", true);
 		}
 	}
 
@@ -274,8 +270,9 @@ methodmap GlobalAPIRequestData < JSON_Object
 		}
 		public set(Handle hFwd)
 		{
-			this.SetInt("callback", view_as<int>(hFwd));
-			this.SetHidden("callback", true);
+			this.SetHandle("callback", hFwd);
+			this.SetKeyType("callback", Type_Int);
+			this.SetKeyHidden("callback", true);
 		}
 	}
 	
@@ -291,7 +288,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 		public set(any data)
 		{
 			this.SetInt("data", data);
-			this.SetHidden("data", true);
+			this.SetKeyHidden("data", true);
 		}
 	}
 
@@ -396,7 +393,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 		}
 		else
 		{
-			JSON_Array hArray = new JSON_Array();
+			JSON_Object hArray = new JSON_Object(true);
 
 			for (int i = 0; i < maxlength; i++)
 			{
@@ -423,7 +420,7 @@ methodmap GlobalAPIRequestData < JSON_Object
 		}
 		else
 		{
-			JSON_Array hArray = new JSON_Array();
+			JSON_Object hArray = new JSON_Object(true);
 
 			for (int i = 0; i < itemCount; i++)
 			{
@@ -444,70 +441,65 @@ methodmap GlobalAPIRequestData < JSON_Object
  	*/
 	public void ToString(char[] queryString, int maxlength)
 	{
-		int jsonSize = this.Length;
+		StringMapSnapshot paramsMap = this.Snapshot();
 
 		char key[64];
 		char value[1024];
 
 		int paramCount = 0;
 
-		for (int i = 0; i < jsonSize; i++)
+		for (int i = 0; i < paramsMap.Length; i++)
 		{
-			int keySize = this.GetKeySize(i);
-			if (keySize > sizeof(key)) keySize = sizeof(key);
-			this.GetKey(i, key, keySize);
-
-			if (this.GetHidden(key))
+			paramsMap.GetKey(i, key, sizeof(key));
+			if (this.GetKeyHidden(key) || json_is_meta_key(key))
 			{
 				continue;
 			}
 
-			switch(this.GetType(key))
+			switch(this.GetKeyType(key))
 			{
-				case JSON_Type_String:
+				case Type_String:
 				{
 					this.GetString(key, value, sizeof(value));
 					AppendToQueryString(paramCount, queryString, maxlength, key, value);
 				}
-				case JSON_Type_Float:
+				case Type_Float:
 				{
 					float temp = this.GetFloat(key);
 					FloatToString(temp, value, sizeof(value));
 					AppendToQueryString(paramCount, queryString, maxlength, key, value);
 				}
-				case JSON_Type_Int:
+				case Type_Int:
 				{
 					int temp = this.GetInt(key);
 					IntToString(temp, value, sizeof(value));
 					AppendToQueryString(paramCount, queryString, maxlength, key, value);
 				}
-				case JSON_Type_Bool:
+				case Type_Bool:
 				{
 					bool temp = this.GetBool(key);
 					BoolToString(temp, value, sizeof(value));
 					AppendToQueryString(paramCount, queryString, maxlength, key, value);
 				}
-				case JSON_Type_Object:
+				case Type_Object:
 				{
 					JSON_Object hObject = this.GetObject(key);
 					
 					if (!hObject.IsArray) continue;
 
-					JSON_Array hArray = view_as<JSON_Array>(hObject);
-
-					for (int x = 0; x < hArray.Length; x++)
+					for (int x = 0; x < hObject.Length; x++)
 					{
-						switch (hArray.GetType(x))
+						switch (hObject.GetKeyTypeIndexed(x))
 						{
-							case JSON_Type_Int:
+							case Type_Int:
 							{
-								int temp = hArray.GetInt(x);
+								int temp = hObject.GetIntIndexed(x);
 								IntToString(temp, value, sizeof(value));
 								AppendToQueryString(paramCount, queryString, maxlength, key, value);
 							}
-							case JSON_Type_String:
+							case Type_String:
 							{
-								hArray.GetString(x, value, sizeof(value));
+								hObject.GetStringIndexed(x, value, sizeof(value));
 								AppendToQueryString(paramCount, queryString, maxlength, key, value);
 							}
 						}
@@ -515,6 +507,8 @@ methodmap GlobalAPIRequestData < JSON_Object
 				}
 			}
 		}
+
+		delete paramsMap;
 	}
 }
 

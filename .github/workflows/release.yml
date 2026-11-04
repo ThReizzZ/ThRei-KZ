@@ -15,6 +15,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install SourceMod 1.11 compiler
+        run: |
+          curl -L --fail -o /tmp/sourcemod-1.11.tar.gz \
+            https://sm.alliedmods.net/smdrop/1.11/sourcemod-1.11.0-git6970-linux.tar.gz
+          mkdir -p /tmp/sourcemod-1.11
+          tar -xzf /tmp/sourcemod-1.11.tar.gz -C /tmp/sourcemod-1.11
+          echo "SPCOMP=/tmp/sourcemod-1.11/addons/sourcemod/scripting/spcomp64" >> "$GITHUB_ENV"
+          echo "SM_INCLUDE=/tmp/sourcemod-1.11/addons/sourcemod/scripting/include" >> "$GITHUB_ENV"
+
+      - name: Build plugins
+        run: ./build.sh
+
       - name: Build plugin packages
         run: |
           ./package.sh

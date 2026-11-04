@@ -53,7 +53,6 @@ public Action CommandSetNotCheater(int client, int args)
 	if (args == 0)
 	{
 		GOKZ_PrintToChat(client, true, "%t", "No SteamID specified");
-		return Plugin_Handled;
 	}
 	
 	char steamID2[64];

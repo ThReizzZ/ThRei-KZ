@@ -196,7 +196,6 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	gF_LastLoadlocTime[client] = 0.0;
-	gI_MostRecentLocation[client] = -1;
 }
 
 public void OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
@@ -328,14 +327,7 @@ public Action Command_LoadLoc(int client, int args)
 	{
 		// load most recent location
 		int id = gI_MostRecentLocation[client];
-		if (IsValidLocationId(id))
-		{
-			LoadLocation(client, id);
-		}
-		else
-		{
-			GOKZ_PrintToChat(client, true, "%t", "Location Not Found");
-		}
+		LoadLocation(client, id);
 	}
 	else if (args == 1)
 	{
@@ -357,7 +349,10 @@ public Action Command_LoadLoc(int client, int args)
 		
 		if (IsValidLocationId(id))
 		{
-			LoadLocation(client, id);
+			if (LoadLocation(client, id))
+			{
+				gF_LastLoadlocTime[client] = GetGameTime();
+			}
 		}
 		else
 		{
@@ -434,12 +429,8 @@ public Action Command_NameLoc(int client, int args)
 		char arg[MAX_LOCATION_NAME_LENGTH];
 		GetCmdArg(1, arg, sizeof(arg));
 		int id = gI_MostRecentLocation[client];
-
-		if (!IsValidLocationId(id))
-		{
-			GOKZ_PrintToChat(client, true, "%t", "Location Not Found");
-		}
-		else if (IsValidLocationName(arg) && IsClientLocationCreator(client, id))
+		
+		if (IsValidLocationName(arg) && IsClientLocationCreator(client, id))
 		{
 			NameLocation(client, id, arg);
 		}
@@ -641,7 +632,6 @@ bool LoadLocation(int client, int id)
 	if (loc.Load(client))
 	{
 		gB_UsedLoc[client] = true;
-		gF_LastLoadlocTime[client] = GetGameTime();
 		if (gB_GOKZHUD)
 		{
 			GOKZ_HUD_ForceUpdateTPMenu(client);
@@ -713,7 +703,6 @@ void ClearLocations()
 		// Prevent memory leak
 		gA_Locations.GetArray(i, loc);
 		delete loc.checkpointData;
-		delete loc.undoTeleportData;
 	}
 	gA_Locations.Clear();
 	for (int i = 1; i <= MaxClients; i++)

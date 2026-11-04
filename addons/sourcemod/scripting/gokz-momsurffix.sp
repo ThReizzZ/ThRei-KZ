@@ -74,8 +74,8 @@ void PROF_STOP(int idx)
 }
 
 #else
-stock void PROF_START() {}
-stock void PROF_STOP(int idx) {}
+#define PROF_START%1;
+#define PROF_STOP%1;
 #endif
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)

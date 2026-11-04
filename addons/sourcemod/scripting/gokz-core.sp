@@ -56,7 +56,6 @@ ConVar gCV_sv_full_alltalk;
 #include "gokz-core/triggerfix.sp"
 #include "gokz-core/demofix.sp"
 #include "gokz-core/teamnumfix.sp"
-#include "gokz-core/particles.sp"
 
 #include "gokz-core/map/buttons.sp"
 #include "gokz-core/map/triggers.sp"
@@ -150,7 +149,6 @@ public void OnClientPutInServer(int client)
 	OnClientPutInServer_VirtualButtons(client);
 	OnClientPutInServer_Options(client);
 	OnClientPutInServer_MapTriggers(client);
-	OnClientPutInServer_MapZones(client);
 	OnClientPutInServer_Triggerfix(client);
 	OnClientPutInServer_Noclip(client);
 	OnClientPutInServer_Turnbinds(client);
@@ -165,7 +163,6 @@ public void OnClientDisconnect(int client)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
 {
-	OnPlayerRunCmd_MapZones(client); // First, before anything reads the timer
 	gI_CmdNum[client] = cmdnum;
 	gI_TickCount[client] = tickcount;
 	OnPlayerRunCmd_Triggerfix(client);
@@ -180,7 +177,9 @@ public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float
 	{
 		return;
 	}
-	OnPlayerRunCmdPost_VirtualButtons(client, cmdnum);
+	
+	OnPlayerRunCmdPost_VirtualButtons(client, buttons, cmdnum); // Emulate buttons first
+	OnPlayerRunCmdPost_Timer(client); // This should be first after emulating buttons
 	OnPlayerRunCmdPost_ValidJump(client);
 	UpdateTrackingVariables(client, cmdnum, buttons); // This should be last
 }
@@ -248,7 +247,7 @@ public MRESReturn DHooks_OnSetModel(int client, Handle params)
 	return MRES_Handled;
 }
 
-public void Hook_PlayerSpawnPost(int client)
+public void OnCSPlayerSpawnPost(int client)
 {
 	if (GetEntPropEnt(client, Prop_Send, "m_hGroundEntity") == -1)
 	{
@@ -256,16 +255,9 @@ public void Hook_PlayerSpawnPost(int client)
 	}
 }
 
-public void Hook_PlayerPostThink(int client)
+public void OnClientPreThinkPost(int client)
 {
-	Hook_PlayerPostThink_Triggerfix(client);
-	Hook_PlayerPostThink_MapZones(client); // After triggerfix, which can touch start zones
-}
-
-public void Hook_PlayerPostThinkPost(int client)
-{
-	Hook_PlayerPostThinkPost_VirtualButtons(client);
-	Hook_PlayerPostThinkPost_Timer(client); // This should be first after emulating buttons
+	OnClientPreThinkPost_UseButtons(client);
 }
 
 public void Movement_OnChangeMovetype(int client, MoveType oldMovetype, MoveType newMovetype)
@@ -341,7 +333,6 @@ public void OnMapStart()
 	OnMapStart_Checkpoints();
 	OnMapStart_TeamNumber();
 	OnMapStart_Demofix();
-	OnMapStart_PrecacheParticles();
 }
 
 public void OnMapEnd()
@@ -459,7 +450,6 @@ static void CreateConVars()
 	AutoExecConfig_SetCreateFile(true);
 	
 	gCV_gokz_chat_prefix = AutoExecConfig_CreateConVar("gokz_chat_prefix", "{green}KZ {grey}| ", "Chat prefix used for GOKZ messages.");
-	CreateConVars_Demofix();
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -508,9 +498,8 @@ static void HookClientEvents(int client)
 {
 	DHookEntity(gH_DHooks_OnTeleport, true, client);
 	DHookEntity(gH_DHooks_SetModel, true, client);
-	SDKHook(client, SDKHook_PostThink, Hook_PlayerPostThink);
-	SDKHook(client, SDKHook_PostThinkPost, Hook_PlayerPostThinkPost);
-	SDKHook(client, SDKHook_SpawnPost, Hook_PlayerSpawnPost);
+	SDKHook(client, SDKHook_SpawnPost, OnCSPlayerSpawnPost);
+	SDKHook(client, SDKHook_PreThinkPost, OnClientPreThinkPost);
 }
 
 static void UpdateTrackingVariables(int client, int cmdnum, int buttons)

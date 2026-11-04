@@ -1,6 +1,6 @@
 # ThRei KZ GOKZ 插件包
 
-ThRei KZ 的 CS:GO GOKZ 服务端插件包。保留原版 GOKZ 的全部功能，只把 GlobalAPI 后端替换为 ThRei API。
+ThRei KZ 的 CS:GO GOKZ 服务端插件包。基线为 **GOKZ 3.6.4 + SourceMod 1.11**，保留原版 GOKZ 的全部功能，只把 GlobalAPI 后端替换为 ThRei API。
 
 不依赖 `kztimerglobal.com`，也不需要安装 GlobalAPI 官方服务。
 
@@ -19,8 +19,11 @@ ThRei KZ 的 CS:GO GOKZ 服务端插件包。保留原版 GOKZ 的全部功能�
 ## 环境要求
 
 - CS:GO dedicated server
-- SourceMod 1.11
-- GOKZ（完整包已包含）
+- SourceMod 1.11.0
+- GOKZ 3.6.4（完整包已包含）
+- MovementAPI 2.4.x
+- DHooks 2.2.0
+- SteamWorks
 - 一个 ThRei 服务器 Key
 
 ## 下载
@@ -34,7 +37,7 @@ https://github.com/ThReizzZ/ThRei-KZ/releases/latest
 ### 全新服务器（没有装过 GOKZ）
 
 ```text
-https://github.com/ThReizzZ/ThRei-KZ/releases/download/v1.1.0/threi-kz-full.tar.gz
+https://github.com/ThReizzZ/ThRei-KZ/releases/download/v2.0.0/threi-kz-full.tar.gz
 ```
 
 包含所有 GOKZ 插件、GlobalAPI 桥接、翻译、gamedata、cfg、materials、models、sound，以及 `maps/gokz-replays.nav`。
@@ -42,10 +45,10 @@ https://github.com/ThReizzZ/ThRei-KZ/releases/download/v1.1.0/threi-kz-full.tar.
 ### 已经装过 GOKZ 的服务器
 
 ```text
-https://github.com/ThReizzZ/ThRei-KZ/releases/download/v1.1.0/threi-kz-upgrade.tar.gz
+https://github.com/ThReizzZ/ThRei-KZ/releases/download/v2.0.0/threi-kz-upgrade.tar.gz
 ```
 
-只包含需要替换的四个插件、两个翻译、配置示例和 `maps/gokz-replays.nav`。
+包含全部 GOKZ 插件、gamedata、翻译、配置示例和 `maps/gokz-replays.nav`，用于把旧 GOKZ 服务器整体切到 3.6.4 基线。
 
 > Windows 可以用 7-Zip 解压 `.tar.gz`；Release 页面也提供 `.zip` 版本。
 
@@ -213,15 +216,13 @@ Legend
 
 ### 升级包
 
-- `GlobalAPI.smx`
-- `gokz-global.smx`
-- `gokz-profile.smx`
-- `gokz-localranks.smx`
-- `gokz-global.phrases.txt`
-- `gokz-localranks.phrases.txt`
+- 全部 GOKZ 3.6.4 插件
+- ThRei 版 `GlobalAPI.smx`
+- GOKZ gamedata
+- GOKZ 翻译
+- `cfg/sourcemod/gokz` 配置
 - `globalapi-key.cfg.example`
 - `globalapi-convars.cfg.example`
-- `gokz/gokz-profile.cfg.example`
 - `maps/gokz-replays.nav`
 - 安装脚本
 

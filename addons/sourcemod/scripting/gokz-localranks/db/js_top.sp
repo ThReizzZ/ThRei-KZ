@@ -8,7 +8,7 @@ static int jumpInfo[MAXPLAYERS + 1][JS_TOP_RECORD_COUNT][3];
 
 void DB_OpenJumpTop(int client, int mode, int jumpType, int blockType)
 {
-	char query[2048];
+	char query[1024];
 	
 	Transaction txn = SQL_CreateTransaction();
 

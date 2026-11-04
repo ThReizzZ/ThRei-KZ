@@ -473,12 +473,8 @@ static void TimerButtonTriggerCheck(char[] touchOutput, int size, StringMap enti
 	}
 	else if (RE_BonusStartButton.Match(touchOutput) > 0)
 	{
-		RE_BonusStartButton.GetSubString(1, touchOutput, size);
+		RE_BonusStartButton.GetSubString(1, touchOutput, sizeof(size));
 		course = StringToInt(touchOutput);
-		if (!GOKZ_IsValidCourse(course, true))
-		{
-			return;
-		}
 		TimerButtonTrigger trigger;
 		if (GetHammerIDFromEntityStringMap(trigger.hammerID, entity))
 		{
@@ -491,12 +487,8 @@ static void TimerButtonTriggerCheck(char[] touchOutput, int size, StringMap enti
 	}
 	else if (RE_BonusEndButton.Match(touchOutput) > 0)
 	{
-		RE_BonusEndButton.GetSubString(1, touchOutput, size);
+		RE_BonusEndButton.GetSubString(1, touchOutput, sizeof(size));
 		course = StringToInt(touchOutput);
-		if (!GOKZ_IsValidCourse(course, true))
-		{
-			return;
-		}
 		TimerButtonTrigger trigger;
 		if (GetHammerIDFromEntityStringMap(trigger.hammerID, entity))
 		{

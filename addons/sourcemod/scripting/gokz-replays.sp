@@ -164,7 +164,7 @@ public Action HookTriggers(int entity, int other)
 	return Plugin_Continue;
 }
 
-public Action Hook_SayText2(UserMsg msg_id, Protobuf msg, const int[] players, int playersNum, bool reliable, bool init)
+public Action Hook_SayText2(UserMsg msg_id, any msg, const int[] players, int playersNum, bool reliable, bool init)
 {
 	// Name change supression
 	// Credit to shavit's simple bhop timer - https://github.com/shavitush/bhoptimer
@@ -174,7 +174,8 @@ public Action Hook_SayText2(UserMsg msg_id, Protobuf msg, const int[] players, i
 	}
 	
 	char msgName[24];
-	msg.ReadString("msg_name", msgName, sizeof(msgName));
+	Protobuf pbmsg = msg;
+	pbmsg.ReadString("msg_name", msgName, sizeof(msgName));
 	if (StrEqual(msgName, "#Cstrike_Name_Change"))
 	{
 		gB_HideNameChange = false;
@@ -196,7 +197,6 @@ public void OnClientPutInServer(int client)
 {
 	OnClientPutInServer_Playback(client);
 	OnClientPutInServer_Recording(client);
-	HookClientEvents(client);
 }
 
 public void OnClientAuthorized(int client, const char[] auth)
@@ -212,18 +212,12 @@ public void OnClientDisconnect(int client)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
 {
-	OnPlayerRunCmd_Recording(client);
-	if (IsFakeClient(client))
+	if (!IsFakeClient(client))
 	{
-		OnPlayerRunCmd_Playback(client, buttons, vel, angles);
-		return Plugin_Changed;
+		return Plugin_Continue;
 	}
-	return Plugin_Continue;
-}
-
-public void Hook_PlayerPostThinkPost(int client)
-{
-	Hook_PlayerPostThinkPost_Recording(client);
+	OnPlayerRunCmd_Playback(client, buttons, vel, angles);
+	return Plugin_Changed;
 }
 
 public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float vel[3], const float angles[3], int weapon, int subtype, int cmdnum, int tickcount, int seed, const int mouse[2])
@@ -302,11 +296,6 @@ public void GOKZ_OnOptionsLoaded(int client)
 	}
 }
 
-public void GOKZ_OnOptionChanged(int client, const char[] option, any newValue)
-{
-	OnOptionChanged_ReplayControls(client, option, newValue);
-}
-
 // =====[ PRIVATE ]=====
 
 static void HookEvents()
@@ -334,11 +323,6 @@ static void HookEvents()
 		StoreToAddress(gA_BotDuckAddr + view_as<Address>(i), 0x90, NumberType_Int8);
 	}
 	delete gameData;
-}
-
-static void HookClientEvents(int client)
-{
-	SDKHook(client, SDKHook_PostThinkPost, Hook_PlayerPostThinkPost);
 }
 
 static void UpdateCurrentMap()

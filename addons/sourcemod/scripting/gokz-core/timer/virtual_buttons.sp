@@ -37,15 +37,6 @@ bool GetHasVirtualEndButton(int client)
 	return hasVirtualEndButton[client];
 }
 
-bool CanUseVirtualStartForCourse(int client, int course)
-{
-	float position[3];
-	return GetHasVirtualStartButton(client)
-		&& GetVirtualButtonPosition(client, position, true) == course
-		&& InRangeOfVirtualStart(client)
-		&& CanReachVirtualStart(client);
-}
-
 bool ToggleVirtualButtonsLock(int client)
 {
 	virtualButtonsLocked[client] = !virtualButtonsLocked[client];
@@ -153,13 +144,9 @@ void OnEndButtonPress_VirtualButtons(int client, int course)
 	}
 }
 
-void Hook_PlayerPostThinkPost_VirtualButtons(int client)
+void OnPlayerRunCmdPost_VirtualButtons(int client, int buttons, int cmdnum)
 {
-	CheckForAndHandleUsage(client, GetClientButtons(client));
-}
-
-void OnPlayerRunCmdPost_VirtualButtons(int client, int cmdnum)
-{
+	CheckForAndHandleUsage(client, buttons);
 	UpdateIndicators(client, cmdnum);
 }
 

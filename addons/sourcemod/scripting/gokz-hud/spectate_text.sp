@@ -79,7 +79,7 @@ char[] FormatSpectatorTextForInfoPanel(KZPlayer player, KZPlayer targetPlayer)
 					}
 					else if (specCount == SPECATATOR_LIST_MAX_COUNT)
 					{
-						StrCat(spectatorTextString, sizeof(spectatorTextString), " ...");
+						Format(spectatorTextString, sizeof(spectatorTextString), " ...");
 					}
 				}
 			}

@@ -207,7 +207,7 @@ void OnClientPutInServer_Timer(int client)
 	lastStartMode[client] = MODE_COUNT; // So it won't equal any mode
 }
 
-void Hook_PlayerPostThinkPost_Timer(int client)
+void OnPlayerRunCmdPost_Timer(int client)
 {
 	if (IsPlayerAlive(client) && GetTimerRunning(client) && !GetPaused(client))
 	{
