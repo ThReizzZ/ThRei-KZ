@@ -1,12 +1,17 @@
 # Changelog
 
+## 2.0.1
+
+- GlobalAPI now reads its key and convars only from the flat `cfg/sourcemod/globalapi-key.cfg` / `globalapi-convars.cfg` paths used by the installer
+- Fixed the bundled sm-json `JSON_Object.SetString` recursion that caused GlobalAPI request stack overflows and blocked all API checks
+- `sm_globalapi_reload_apikey` now re-runs the GlobalAPI checks immediately
+- Installer and docs now state that a key change requires a server restart; changing map alone does not reload the key
+
 ## 2.0.0
 
 - Rebuilt on the GOKZ 3.6.4 baseline instead of GOKZ 3.8.0
 - All plugins are compiled with SourceMod 1.11 to match the 1.11 runtime
 - GlobalAPI is now based on the official 2.0.0 plugin, with only the backend URL changed to ThRei
-- GlobalAPI reads its key and convars only from the flat `cfg/sourcemod/globalapi-key.cfg` / `globalapi-convars.cfg` paths used by the installer
-- Fixed the bundled sm-json `JSON_Object.SetString` recursion that caused GlobalAPI request stack overflows and blocked all API checks
 - Only one full installation package is published; the separate upgrade package was removed
 - Kept ThRei changes: profile clan tag, MapCheck unknown filesize handling, ThRei API backend
 - Updated install scripts to back up all GOKZ plugins, gamedata and translations
