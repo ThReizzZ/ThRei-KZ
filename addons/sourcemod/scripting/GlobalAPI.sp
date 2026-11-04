@@ -3,7 +3,11 @@
 #define DATA_DIR "data/GlobalAPI"
 #define CONFIG_DIR "cfg/sourcemod/GlobalAPI"
 
-#define APIKEY_PATH "cfg/sourcemod/GlobalAPI/GlobalAPI-key.cfg"
+// ThRei: keep the historical flat key location used by the old bridge and by
+// the installer/docs. The official GlobalAPI path is kept as a fallback.
+#define APIKEY_PATH "cfg/sourcemod/globalapi-key.cfg"
+#define APIKEY_PATH_FALLBACK "configs/globalapi-key.cfg"
+#define APIKEY_PATH_OFFICIAL "cfg/sourcemod/GlobalAPI/GlobalAPI-key.cfg"
 
 // =========================================================== //
 
@@ -88,7 +92,7 @@ public void OnPluginStart()
 	sourcemodCvar.GetString(gC_SourcemodVersion, sizeof(gC_SourcemodVersion));
 
 	gB_usingAPIKey = ReadAPIKey();
-	AutoExecConfig(true, "GlobalAPI", "sourcemod/GlobalAPI");
+	AutoExecConfig(true, "globalapi-convars");
 }
 
 public void OnMapStart()
