@@ -89,4 +89,4 @@ if (-not (Test-Path $keyFile)) {
 Write-Host ""
 Write-Host "[ThRei] installed."
 Write-Host "[ThRei] edit $keyFile and put your ThRei server key on the first line."
-Write-Host "[ThRei] then change map or restart the server, and run !gc in game."
+Write-Host "[ThRei] then restart the server (a map change alone will not reload the key), and run !gc in game."

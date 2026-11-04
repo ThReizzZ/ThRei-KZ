@@ -69,4 +69,4 @@ fi
 echo
 echo "[ThRei] installed."
 echo "[ThRei] edit $KEY_FILE and put your ThRei server key on the first line."
-echo "[ThRei] then change map or restart the server, and run !gc in game."
+echo "[ThRei] then restart the server (a map change alone will not reload the key), and run !gc in game."

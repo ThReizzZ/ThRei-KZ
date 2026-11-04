@@ -138,7 +138,7 @@ csgo/cfg/sourcemod/globalapi-key.cfg
 6. 停用 `threi-kz-uploader.smx`。现在 GOKZ 已经直接上传，两个同时开会重复上传。
    uploader 只保留用于手动历史回填。
 
-7. 换图或重启服务器。
+7. 重启服务器。改 key 后必须重启，换图不会重新读取 key。
 
 ## 计分板格式
 

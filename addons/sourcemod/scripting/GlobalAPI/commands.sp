@@ -108,7 +108,16 @@ public Action Command_Info(int client, int args)
 public Action Command_ReloadAPIKey(int client, int args)
 {
 	gB_usingAPIKey = ReadAPIKey();
+
+	// Re-run the initialization callbacks so gokz-global refreshes its checks
+	// immediately instead of waiting for the next map.
+	if (gB_IsInit)
+	{
+		Call_Global_OnInitialized();
+	}
+
 	ReplyToCommand(client, "[GlobalAPI] API Key reloaded!");
+	return Plugin_Handled;
 }
 
 // =====[ PRIVATE ]=====

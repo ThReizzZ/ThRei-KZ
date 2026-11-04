@@ -82,7 +82,7 @@ csgo/cfg/sourcemod/globalapi-key.cfg
 threi_xxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-最后换图或重启服务器。
+最后重启服务器。改 key 后必须重启，换图不会重新读取 key。
 
 ## 手动安装
 
@@ -91,7 +91,7 @@ threi_xxxxxxxxxxxxxxxxxxxxxxxx
 3. 写入 `csgo/cfg/sourcemod/globalapi-key.cfg`。
 4. 停用旧的 `GlobalAPI-Core.smx`、`GlobalAPI-Jumpstats.smx`。
 5. 停用 `threi-kz-uploader.smx`（只在手动历史回填时使用）。
-6. 换图或重启。
+6. 重启服务器。改 key 后必须重启，换图不会重新读取 key。
 7. 进服输入 `!gc`，确认 API Key / Plugins / Settings Enforcer / Map / You 都是绿色。
 
 详细说明见 `INSTALL.md`。
@@ -107,10 +107,12 @@ threi_xxxxxxxxxxxxxxxxxxxxxxxx
 ### `cfg/sourcemod/globalapi-convars.cfg`
 
 ```cfg
-sm_globalapi_url "https://api.threi.cn/api/v2.0"
+GlobalAPI_Debug "0"
+GlobalAPI_Staging "0"
 ```
 
-一般不需要改。
+`GlobalAPI_Staging "1"` 会使用 staging 地址；一般保持 `0`。
+API 地址已经编译进插件，不能通过这个文件修改。
 
 ### `cfg/sourcemod/gokz/gokz-profile.cfg`
 
