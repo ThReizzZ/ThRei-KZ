@@ -6,6 +6,34 @@
 
 只提供一个完整安装包 `threi-kz-full.tar.gz`，包含所有 GOKZ 插件、GlobalAPI 桥接、翻译、gamedata、cfg、materials、models、sound，以及 `maps/gokz-replays.nav`。
 
+## 服务器前置（不在本插件包内）
+
+这些是服务器运行依赖，安装包只负责 GOKZ/ThRei 插件，不包含它们：
+
+- SourceMod **1.11.0**
+- DHooks **2.2.0**（SourceMod 1.11 使用；不要用 SourceMod 1.12 自带的 DHooks）
+- MovementAPI **2.4.x**
+- SteamWorks
+- NoLobbyReservation（不装会导致独立版 CS:GO 客户端无法加入服务器）
+
+DHooks 2.2.0 下载：
+
+```text
+https://github.com/peace-maker/DHooks2/releases/tag/v2.2.0-detours17
+```
+
+SourceMod 1.11 使用文件名带 `sm110` 的包。安装后检查：
+
+```text
+sm exts list
+sm plugins list
+```
+
+- `sm exts list` 里应看到 `DHooks (2.2.0)` 且已加载
+- `sm plugins list` 里应看到 `MovementAPI`、`GOKZ` 系列插件和 `NoLobbyReservation`
+
+如果 DHooks 没加载，MovementAPI 和 GOKZ 模式插件会失败，服务器会退回普通 CS:GO 模式；如果没有 NoLobbyReservation，客户端会卡在大厅/无法直接连接。
+
 ## 获取服务器 Key
 
 向 ThRei 管理员申请服务器 Key。Key 只发给服主，不要公开。

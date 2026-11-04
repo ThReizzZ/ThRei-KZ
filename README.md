@@ -22,9 +22,12 @@ ThRei KZ 的 CS:GO GOKZ 服务端插件包。基线为 **GOKZ 3.6.4 + SourceMod 
 - SourceMod 1.11.0
 - GOKZ 3.6.4（完整包已包含）
 - MovementAPI 2.4.x
-- DHooks 2.2.0
+- DHooks 2.2.0（只用于 SourceMod 1.11；不要混用 SourceMod 1.12 自带的 DHooks）
 - SteamWorks
+- NoLobbyReservation（独立版 CS:GO 客户端连接服务器必需，不在本插件包内）
 - 一个 ThRei 服务器 Key
+
+> `DHooks 2.2.0` 和 `NoLobbyReservation` 是服务器前置，不是 ThReiKZ 插件包内容。重装服务器时这两个必须单独安装。
 
 ## 下载
 
