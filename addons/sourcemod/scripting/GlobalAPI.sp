@@ -3,11 +3,8 @@
 #define DATA_DIR "data/GlobalAPI"
 #define CONFIG_DIR "cfg/sourcemod/GlobalAPI"
 
-// ThRei: keep the historical flat key location used by the old bridge and by
-// the installer/docs. The official GlobalAPI path is kept as a fallback.
+// ThRei: the installer, docs and the old bridge all use this flat path.
 #define APIKEY_PATH "cfg/sourcemod/globalapi-key.cfg"
-#define APIKEY_PATH_FALLBACK "configs/globalapi-key.cfg"
-#define APIKEY_PATH_OFFICIAL "cfg/sourcemod/GlobalAPI/GlobalAPI-key.cfg"
 
 // =========================================================== //
 

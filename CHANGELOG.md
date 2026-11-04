@@ -5,7 +5,7 @@
 - Rebuilt on the GOKZ 3.6.4 baseline instead of GOKZ 3.8.0
 - All plugins are compiled with SourceMod 1.11 to match the 1.11 runtime
 - GlobalAPI is now based on the official 2.0.0 plugin, with only the backend URL changed to ThRei
-- GlobalAPI reads its key and convars from the flat `cfg/sourcemod/globalapi-key.cfg` / `globalapi-convars.cfg` paths used by the installer (official paths kept as fallbacks)
+- GlobalAPI reads its key and convars only from the flat `cfg/sourcemod/globalapi-key.cfg` / `globalapi-convars.cfg` paths used by the installer
 - Only one full installation package is published; the separate upgrade package was removed
 - Kept ThRei changes: profile clan tag, MapCheck unknown filesize handling, ThRei API backend
 - Updated install scripts to back up all GOKZ plugins, gamedata and translations

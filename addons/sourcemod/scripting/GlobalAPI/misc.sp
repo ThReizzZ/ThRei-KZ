@@ -1,28 +1,15 @@
 bool ReadAPIKey()
 {
-	char path[PLATFORM_MAX_PATH];
-	strcopy(path, sizeof(path), APIKEY_PATH);
-
-	if (!FileExists(path))
-	{
-		BuildPath(Path_SM, path, sizeof(path), "%s", APIKEY_PATH_FALLBACK);
-	}
-
-	if (!FileExists(path))
-	{
-		strcopy(path, sizeof(path), APIKEY_PATH_OFFICIAL);
-	}
-
-	if (!FileExists(path))
+	if (!FileExists(APIKEY_PATH))
 	{
 		LogError("File '%s' does not exist!", APIKEY_PATH);
 		return false;
 	}
 
-	File file = OpenFile(path, "r");
+	File file = OpenFile(APIKEY_PATH, "r");
 	if (file == null)
 	{
-		LogError("Cannot read API key from '%s'!", path);
+		LogError("Cannot read API key from '%s'!", APIKEY_PATH);
 		return false;
 	}
 
