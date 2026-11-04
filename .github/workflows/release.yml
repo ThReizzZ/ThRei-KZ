@@ -27,20 +27,14 @@ jobs:
       - name: Build plugins
         run: ./build.sh
 
-      - name: Build plugin packages
-        run: |
-          ./package.sh
-          ./package-full.sh
+      - name: Build plugin package
+        run: ./package.sh
 
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "${GITHUB_REF_NAME}" \
-            release/threi-kz-full.zip \
             release/threi-kz-full.tar.gz \
-            release/threi-kz-upgrade.zip \
-            release/threi-kz-upgrade.tar.gz \
-            release/threi-gokz-plugins.tar.gz \
             --title "ThRei KZ ${GITHUB_REF_NAME}" \
             --notes-file CHANGELOG.md

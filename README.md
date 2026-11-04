@@ -34,23 +34,13 @@ ThRei KZ 的 CS:GO GOKZ 服务端插件包。基线为 **GOKZ 3.6.4 + SourceMod 
 https://github.com/ThReizzZ/ThRei-KZ/releases/latest
 ```
 
-### 全新服务器（没有装过 GOKZ）
-
 ```text
 https://github.com/ThReizzZ/ThRei-KZ/releases/download/v2.0.0/threi-kz-full.tar.gz
 ```
 
-包含所有 GOKZ 插件、GlobalAPI 桥接、翻译、gamedata、cfg、materials、models、sound，以及 `maps/gokz-replays.nav`。
+只提供一个完整安装包，包含所有 GOKZ 插件、GlobalAPI 桥接、翻译、gamedata、cfg、materials、models、sound，以及 `maps/gokz-replays.nav`。
 
-### 已经装过 GOKZ 的服务器
-
-```text
-https://github.com/ThReizzZ/ThRei-KZ/releases/download/v2.0.0/threi-kz-upgrade.tar.gz
-```
-
-包含全部 GOKZ 插件、gamedata、翻译、配置示例和 `maps/gokz-replays.nav`，用于把旧 GOKZ 服务器整体切到 3.6.4 基线。
-
-> Windows 可以用 7-Zip 解压 `.tar.gz`；Release 页面也提供 `.zip` 版本。
+> Windows 可以用 7-Zip 解压 `.tar.gz`。
 
 ## 获取服务器 Key
 
@@ -214,18 +204,6 @@ Legend
 - `maps/gokz-replays.nav`
 - 安装脚本
 
-### 升级包
-
-- 全部 GOKZ 3.6.4 插件
-- ThRei 版 `GlobalAPI.smx`
-- GOKZ gamedata
-- GOKZ 翻译
-- `cfg/sourcemod/gokz` 配置
-- `globalapi-key.cfg.example`
-- `globalapi-convars.cfg.example`
-- `maps/gokz-replays.nav`
-- 安装脚本
-
 ### 可选 uploader
 
 `optional/uploader/` 里是历史回填工具，只用于把旧 GOKZ SQLite 成绩补传到 ThRei。
@@ -245,8 +223,7 @@ export SPCOMP=/path/to/sourcemod/addons/sourcemod/scripting/spcomp64
 生成安装包：
 
 ```bash
-./package.sh        # 升级包
-./package-full.sh   # 完整包
+./package.sh
 ```
 
 产物在 `release/`。
@@ -281,7 +258,7 @@ export SPCOMP=/path/to/sourcemod/addons/sourcemod/scripting/spcomp64
 csgo/maps/gokz-replays.nav
 ```
 
-存在。完整包和升级包都已经包含这个文件。
+存在。安装包已经包含这个文件。
 
 ## License
 

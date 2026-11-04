@@ -4,20 +4,13 @@
 
 这套插件基于 **GOKZ 3.6.4 + SourceMod 1.11**，保留原版 GOKZ 全部功能，只把 GlobalAPI 后端换成 ThRei。
 
-## 选择哪个包
-
-- **全新服务器，没有装过 GOKZ**：用 `threi-kz-full.tar.gz`。
-  包含所有 GOKZ 插件、GlobalAPI 桥接、翻译、gamedata、cfg、materials、models、sound，以及 `maps/gokz-replays.nav`。
-- **已经装过 GOKZ**：用 `threi-kz-upgrade.tar.gz`。
-  包含全部 GOKZ 插件、gamedata、翻译、配置和 `maps/gokz-replays.nav`，用于把旧 GOKZ 服务器整体切到 3.6.4 基线。
-
-两个包都可以运行同一个一键安装脚本。
+只提供一个完整安装包 `threi-kz-full.tar.gz`，包含所有 GOKZ 插件、GlobalAPI 桥接、翻译、gamedata、cfg、materials、models、sound，以及 `maps/gokz-replays.nav`。
 
 ## 获取服务器 Key
 
 向 ThRei 管理员申请服务器 Key。Key 只发给服主，不要公开。
 
-## 文件（升级包）
+## 文件（安装包）
 
 ```text
 addons/sourcemod/plugins/*.smx
@@ -163,4 +156,4 @@ sm plugins list
 - `GlobalAPI.smx` 是 ThRei 兼容层，不是 kztimerglobal 插件。
 - 新地图必须先加入 ThRei 地图池，否则 GOKZ 不会上传该地图的成绩。
 - 地图文件大小会参与校验；请确保服务器地图版本与地图池一致。
-- 回放需要 `csgo/maps/gokz-replays.nav`，完整包和升级包都已经包含。
+- 回放需要 `csgo/maps/gokz-replays.nav`，安装包已经包含。
