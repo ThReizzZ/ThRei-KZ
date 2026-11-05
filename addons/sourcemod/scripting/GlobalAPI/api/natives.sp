@@ -868,8 +868,17 @@ public int Native_CreateRecord(Handle plugin, int numParams)
 	int teleports = GetNativeCell(8);
 	float time = GetNativeCell(9);
 
+	char playerName[MAX_NAME_LENGTH];
+	playerName[0] = '\0';
+	int client = FindClientBySteamId(steamId);
+	if (client > 0)
+	{
+		GetClientName(client, playerName, sizeof(playerName));
+	}
+
 	GlobalAPIRequestData hData = CreateRequestData(plugin, callback, data);
 	hData.AddString("steam_id", steamId);
+	hData.AddString("player_name", playerName);
 	hData.AddNum("map_id", mapId);
 	hData.AddString("mode", mode);
 	hData.AddNum("stage", stage);

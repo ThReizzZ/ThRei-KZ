@@ -38,7 +38,7 @@ https://github.com/ThReizzZ/ThRei-KZ/releases/latest
 ```
 
 ```text
-https://github.com/ThReizzZ/ThRei-KZ/releases/download/v2.0.0/threi-kz-full.tar.gz
+https://github.com/ThReizzZ/ThRei-KZ/releases/download/v2.0.2/threi-kz-full.tar.gz
 ```
 
 只提供一个完整安装包，包含所有 GOKZ 插件、GlobalAPI 桥接、翻译、gamedata、cfg、materials、models、sound，以及 `maps/gokz-replays.nav`。

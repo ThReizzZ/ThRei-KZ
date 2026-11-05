@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.2
+
+- GlobalAPI now uploads `player_name` with record submissions again, fixing "未知玩家" on the website after the 2.0.0 rebuild
+
 ## 2.0.1
 
 - GlobalAPI now reads its key and convars only from the flat `cfg/sourcemod/globalapi-key.cfg` / `globalapi-convars.cfg` paths used by the installer

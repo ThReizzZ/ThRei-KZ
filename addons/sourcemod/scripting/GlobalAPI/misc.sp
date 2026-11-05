@@ -28,6 +28,24 @@ void Initialize()
 	Call_Global_OnInitialized();
 }
 
+int FindClientBySteamId(const char[] steamId)
+{
+	char candidate[32];
+	for (int client = 1; client <= MaxClients; client++)
+	{
+		if (!IsClientInGame(client))
+		{
+			continue;
+		}
+		if (GetClientAuthId(client, AuthId_Steam2, candidate, sizeof(candidate))
+			&& StrEqual(candidate, steamId))
+		{
+			return client;
+		}
+	}
+	return 0;
+}
+
 bool FormatRequestUrl(char[] buffer, int maxlength, char[] endpoint)
 {
 	return Format(buffer, maxlength, "%s/%s", gC_baseUrl, endpoint) > 0;
