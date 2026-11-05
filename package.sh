@@ -4,6 +4,8 @@ set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STAGE="$DIR/.release-full"
 
+python3 "$DIR/scripts/check-globalapi.py" "$DIR/addons/sourcemod/plugins/GlobalAPI.smx"
+
 rm -rf "$STAGE"
 mkdir -p "$STAGE"
 
