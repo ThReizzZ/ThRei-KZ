@@ -21,10 +21,32 @@
 		"chi"		"{darkred}当前没有可用的回放机器人."
 		"ru"		"{darkred}В настоящее время нет доступных ботов воспроизведения."
 	}
+	"Bot Add Failed"
+	{
+		"en"		"{red}Failed to add a replay bot."
+	}
+	"Server Full"
+	{
+		"en"		"{red}The server is full, so no replay bot can be added!"
+	}
 	"No Replay Found"
 	{
 		"en"		"{red}No replay found!"
 		"chi"		"{red}本地未找到回放!"
+	}
+	"Personal Replay Updated"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"en"		"{purple}(>_<) {grey}| {red}Your personal best replay has been updated: {1} [{2} {3}]"
+		"chi"		"{purple}(>_<) {grey}| {red}你的个人 PB 录像已更新: {1} [{2} {3}]"
+		"ru"		"{purple}(>_<) {grey}| {red}Ваш повтор личного рекорда обновлён: {1} [{2} {3}]"
+	}
+	"Server Record Replay Updated"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"en"		"{purple}(>_<) {grey}| {red}The server record replay has been updated: {1} [{2} {3}]"
+		"chi"		"{purple}(>_<) {grey}| {red}服务器纪录录像已更新: {1} [{2} {3}]"
+		"ru"		"{purple}(>_<) {grey}| {red}Повтор рекорда сервера обновлён: {1} [{2} {3}]"
 	}
 
 
@@ -103,17 +125,33 @@
 		"chi"		"前进 10 秒"
 		"ru"		"Пропустить 10с"
 	}
+	"Replay Controls - Forward 1s"
+	{
+		"en"		"Forward 1s"
+		"chi"		"前进 1 秒"
+		"ru"		"Вперёд 1с"
+	}
 	"Replay Controls - Rewind"
 	{
 		"en"		"Rewind 10s"
 		"chi"		"回退 10 秒"
 		"ru"		"Перемотать 10с"
 	}
+	"Replay Controls - Rewind 1s"
+	{
+		"en"		"Rewind 1s"
+		"chi"		"回退 1 秒"
+		"ru"		"Назад 1с"
+	}
 	"Replay Controls - Freecam"
 	{
 		"en"		"Freecam"
 		"chi"		"自由视角"
 		"ru"		"Свободная камера"
+	}
+	"Replay Controls - Back To Bot"
+	{
+		"en"		"Back to bot"
 	}
 	"Replay Controls - Exit"
 	{
@@ -125,5 +163,80 @@
 		"en"		"{red}Invalid Time."
 		"chi"		"{red}无效的计时."
 		"ru"		"{red}Неправильное время."
+	}
+	"Replay Controls - Bot Controlled"
+	{
+		"en"		"{red}Another player is controlling this replay bot!"
+	}
+	"Replay Controls - Not Spectating Bot"
+	{
+		"en"		"{red}You are not spectating a replay bot!"
+	}
+	"Replay Controls - Not Controlling Bot"
+	{
+		"en"		"{red}You are not controlling this replay bot! Use !rpcontrols to take control."
+	}
+
+
+	// =====[ REPLAY MENUS ]=====
+	"Replay Menu - Categories - Title"
+	{
+		// Replay Menu
+		//
+		// Map - kz_map
+		// Mode - Vanilla
+		//
+		"#format"	"{1:s},{2:s}"
+		"en"		"Replay Menu\n \nMap - {1}\nMode - {2}\n "
+		"chi"		"录像菜单\n \n地图 - {1}\n模式 - {2}\n "
+	}
+	"Replay Menu - Server Records"
+	{
+		"en"		"Server Records"
+		"chi"		"服务器记录"
+	}
+	"Replay Menu - Personal Records"
+	{
+		"en"		"Personal Records"
+		"chi"		"个人记录"
+	}
+	"Replay Menu - All Server Records"
+	{
+		"en"		"All Server Records"
+		"chi"		"服务器所有记录"
+	}
+	"Replay Menu - Server Records - Title"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"Server Records\n \nMap - {1}\nMode - {2}\n "
+		"chi"		"服务器记录\n \n地图 - {1}\n模式 - {2}\n "
+	}
+	"Replay Menu - Personal Records - Title"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"Personal Records\n \nMap - {1}\nMode - {2}\n "
+		"chi"		"个人记录\n \n地图 - {1}\n模式 - {2}\n "
+	}
+	"Replay Menu - All Records - Type - Title"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"All Server Records\n \nMap - {1}\nMode - {2}\n \nSelect Pro or Nub"
+		"chi"		"服务器所有记录\n \n地图 - {1}\n模式 - {2}\n \n选择 Pro 或 Nub"
+	}
+	"Replay Menu - All Records - Title"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"en"		"All Server Records\n \nMap - {1}\nMode - {2}\nType - {3}\n "
+		"chi"		"服务器所有记录\n \n地图 - {1}\n模式 - {2}\n类型 - {3}\n "
+	}
+	"Replay Menu - No Personal Replays"
+	{
+		"en"		"{darkred}You have no personal replays on this map."
+		"chi"		"{darkred}你在这张地图没有个人录像."
+	}
+	"Replay Menu - No Records"
+	{
+		"en"		"{darkred}No replays found."
+		"chi"		"{darkred}没有找到录像."
 	}
 }

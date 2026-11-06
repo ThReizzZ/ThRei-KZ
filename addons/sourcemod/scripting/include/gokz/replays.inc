@@ -203,6 +203,26 @@ enum struct ReplayTickData
 forward Action GOKZ_RP_OnReplaySaved(int client, int replayType, const char[] map, int course, int timeType, float time, const char[] filePath, bool tempReplay);
 
 /**
+ * Called after a jumpstat PB replay has been written to disk.
+ *
+ * @param client			Client index.
+ * @param jumpType			Jump type.
+ * @param mode				Movement mode.
+ * @param style				Movement style.
+ * @param distance			Jump distance.
+ * @param block				Block distance, or 0 for a normal jump.
+ * @param filePath			Replay file path.
+ */
+forward void GOKZ_RP_OnJumpReplaySaved(
+	int client,
+	int jumpType,
+	int mode,
+	int style,
+	float distance,
+	int block,
+	const char[] filePath);
+
+/**
  * Called when a currently being recorded replay is discarded from
  * memory and recording has been stopped (without writing it to disk).
  *

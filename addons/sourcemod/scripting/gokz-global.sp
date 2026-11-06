@@ -6,6 +6,7 @@
 #include <gokz/anticheat>
 #include <gokz/core>
 #include <gokz/global>
+#include <gokz/jumpstats>
 #include <gokz/replays>
 #include <gokz/momsurffix>
 
@@ -60,6 +61,8 @@ ConVar gCV_EnforcedCVar[ENFORCEDCVAR_COUNT];
 #include "gokz-global/maptop_menu.sp"
 #include "gokz-global/print_records.sp"
 #include "gokz-global/send_run.sp"
+#include "gokz-global/jumpstats_detail.sp"
+#include "gokz-global/jumpstats.sp"
 #include "gokz-global/points.sp"
 
 

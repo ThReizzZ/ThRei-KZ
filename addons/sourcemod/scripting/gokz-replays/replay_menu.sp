@@ -1,10 +1,14 @@
 /*
-	Lets player select a replay bot to play back.
+	Replay menus.
+
+	sm_replay -> mode menu -> category menu:
+	  1. Server records (one Pro and one Nub replay per course)
+	  2. Personal records (the caller's own PB per course)
+	  3. All server records -> Pro/Nub -> every player's PB, sorted by time
 */
 
-
-
 static int selectedReplayMode[MAXPLAYERS + 1];
+static int selectedReplayTimeType[MAXPLAYERS + 1];
 
 
 
@@ -12,17 +16,40 @@ static int selectedReplayMode[MAXPLAYERS + 1];
 
 void DisplayReplayModeMenu(int client)
 {
-	if (g_ReplayInfoCache.Length == 0)
-	{
-		GOKZ_PrintToChat(client, true, "%t", "No Replays Found (Map)");
-		GOKZ_PlayErrorSound(client);
-		return;
-	}
-	
 	Menu menu = new Menu(MenuHandler_ReplayMode);
 	menu.SetTitle("%T", "Replay Menu (Mode) - Title", client, gC_CurrentMap);
-	GOKZ_MenuAddModeItems(client, menu, false);
+	AddReplayModeItems(client, menu);
 	menu.Display(client, MENU_TIME_FOREVER);
+}
+
+// Adds the mode items in KZT, SKZ, VNL order (item info is the mode ID).
+static void AddReplayModeItems(int client, Menu menu)
+{
+	int selectedMode = GOKZ_GetCoreOption(client, Option_Mode);
+	int order[MODE_COUNT] = { Mode_KZTimer, Mode_SimpleKZ, Mode_Vanilla };
+	char display[32], info[8];
+
+	menu.RemoveAllItems();
+	for (int i = 0; i < MODE_COUNT; i++)
+	{
+		int mode = order[i];
+
+		FormatEx(display, sizeof(display), "%s", gC_ModeNames[mode]);
+		if (mode == selectedMode)
+		{
+			Format(display, sizeof(display), "%s*", display);
+		}
+		FormatEx(info, sizeof(info), "%d", mode);
+
+		if (GOKZ_GetModeLoaded(mode))
+		{
+			menu.AddItem(info, display, ITEMDRAW_DEFAULT);
+		}
+		else
+		{
+			menu.AddItem(info, display, ITEMDRAW_DISABLED);
+		}
+	}
 }
 
 
@@ -33,8 +60,10 @@ public int MenuHandler_ReplayMode(Menu menu, MenuAction action, int param1, int 
 {
 	if (action == MenuAction_Select)
 	{
-		selectedReplayMode[param1] = param2;
-		DisplayReplayMenu(param1);
+		char info[8];
+		menu.GetItem(param2, info, sizeof(info));
+		selectedReplayMode[param1] = StringToInt(info);
+		DisplayReplayCategoryMenu(param1);
 	}
 	else if (action == MenuAction_End)
 	{
@@ -43,42 +72,147 @@ public int MenuHandler_ReplayMode(Menu menu, MenuAction action, int param1, int 
 	return 0;
 }
 
-public int MenuHandler_Replay(Menu menu, MenuAction action, int param1, int param2)
+public int MenuHandler_ReplayCategory(Menu menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_Select)
 	{
-		char info[4];
+		char info[8];
 		menu.GetItem(param2, info, sizeof(info));
-		int replayIndex = StringToInt(info);
-		int replayInfo[RP_CACHE_BLOCKSIZE];
-		g_ReplayInfoCache.GetArray(replayIndex, replayInfo);
-
-		char path[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, path, sizeof(path),
-			"%s/%s/%d_%s_%s_%s.%s",
-			RP_DIRECTORY_RUNS, gC_CurrentMap, replayInfo[0], gC_ModeNamesShort[replayInfo[1]], gC_StyleNamesShort[replayInfo[2]], gC_TimeTypeNames[replayInfo[3]], RP_FILE_EXTENSION);
-		if (!FileExists(path))
+		switch (StringToInt(info))
 		{
-			BuildPath(Path_SM, path, sizeof(path),
-				"%s/%d_%s_%s_%s.%s",
-				RP_DIRECTORY, gC_CurrentMap, replayInfo[0], gC_ModeNamesShort[replayInfo[1]], gC_StyleNamesShort[replayInfo[2]], gC_TimeTypeNames[replayInfo[3]], RP_FILE_EXTENSION);
-			if (!FileExists(path))
+			case 0:
 			{
-				LogError("Failed to load file: \"%s\".", path);
-				GOKZ_PrintToChat(param1, true, "%t", "Replay Menu - No File");
-				return 0;
+				DisplayServerRecordsMenu(param1);
+			}
+			case 1:
+			{
+				DisplayPersonalRecordsMenu(param1);
+			}
+			case 2:
+			{
+				DisplayAllRecordsTypeMenu(param1);
 			}
 		}
-		
-		LoadReplayBot(param1, path);
 	}
 	else if (action == MenuAction_Cancel)
 	{
-		DisplayReplayModeMenu(param1);
+		if (param2 == MenuCancel_Exit && IsValidClient(param1))
+		{
+			DisplayReplayModeMenu(param1);
+		}
 	}
 	else if (action == MenuAction_End)
 	{
 		delete menu;
+	}
+	return 0;
+}
+
+public int MenuHandler_ServerRecords(Menu menu, MenuAction action, int param1, int param2)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[48];
+		menu.GetItem(param2, info, sizeof(info));
+		LoadReplayFromInfo(param1, info);
+	}
+	else if (action == MenuAction_Cancel)
+	{
+		if (param2 == MenuCancel_Exit && IsValidClient(param1))
+		{
+			DisplayReplayCategoryMenu(param1);
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	}
+	return 0;
+}
+
+public int MenuHandler_PersonalRecords(Menu menu, MenuAction action, int param1, int param2)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[48];
+		menu.GetItem(param2, info, sizeof(info));
+		LoadReplayFromInfo(param1, info);
+	}
+	else if (action == MenuAction_Cancel)
+	{
+		if (param2 == MenuCancel_Exit && IsValidClient(param1))
+		{
+			DisplayReplayCategoryMenu(param1);
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	}
+	return 0;
+}
+
+public int MenuHandler_AllRecordsType(Menu menu, MenuAction action, int param1, int param2)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[8];
+		menu.GetItem(param2, info, sizeof(info));
+		selectedReplayTimeType[param1] = StringToInt(info);
+		DisplayAllRecordsMenu(param1);
+	}
+	else if (action == MenuAction_Cancel)
+	{
+		if (param2 == MenuCancel_Exit && IsValidClient(param1))
+		{
+			DisplayReplayCategoryMenu(param1);
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	}
+	return 0;
+}
+
+public int MenuHandler_AllRecords(Menu menu, MenuAction action, int param1, int param2)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[48];
+		menu.GetItem(param2, info, sizeof(info));
+		LoadReplayFromInfo(param1, info);
+	}
+	else if (action == MenuAction_Cancel)
+	{
+		if (param2 == MenuCancel_Exit && IsValidClient(param1))
+		{
+			DisplayAllRecordsTypeMenu(param1);
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	}
+	return 0;
+}
+
+public int SortFunc_PlayerReplayByTime(int index1, int index2, Handle array, Handle hndl)
+{
+	ArrayList list = view_as<ArrayList>(array);
+	int block1[6], block2[6];
+	list.GetArray(index1, block1);
+	list.GetArray(index2, block2);
+
+	float time1 = view_as<float>(block1[5]);
+	float time2 = view_as<float>(block2[5]);
+	if (time1 < time2)
+	{
+		return -1;
+	}
+	else if (time1 > time2)
+	{
+		return 1;
 	}
 	return 0;
 }
@@ -87,53 +221,257 @@ public int MenuHandler_Replay(Menu menu, MenuAction action, int param1, int para
 
 // =====[ PRIVATE ]=====
 
-static void DisplayReplayMenu(int client)
+static void DisplayReplayCategoryMenu(int client)
 {
-	Menu menu = new Menu(MenuHandler_Replay);
-	menu.SetTitle("%T", "Replay Menu - Title", client, gC_CurrentMap, gC_ModeNames[selectedReplayMode[client]]);
-	if (ReplayMenuAddItems(client, menu) > 0)
-	{
-		menu.Display(client, MENU_TIME_FOREVER);
-	}
-	else
-	{
-		GOKZ_PrintToChat(client, true, "%t", "No Replays Found (Mode)", gC_ModeNames[selectedReplayMode[client]]);
-		GOKZ_PlayErrorSound(client);
-		DisplayReplayModeMenu(client);
-	}
+	Menu menu = new Menu(MenuHandler_ReplayCategory);
+	menu.SetTitle("%T", "Replay Menu - Categories - Title", client, gC_CurrentMap, gC_ModeNames[selectedReplayMode[client]]);
+
+	char display[64];
+	FormatEx(display, sizeof(display), "%T", "Replay Menu - Server Records", client);
+	menu.AddItem("0", display);
+	FormatEx(display, sizeof(display), "%T", "Replay Menu - Personal Records", client);
+	menu.AddItem("1", display);
+	FormatEx(display, sizeof(display), "%T", "Replay Menu - All Server Records", client);
+	menu.AddItem("2", display);
+
+	menu.Display(client, MENU_TIME_FOREVER);
 }
 
-// Returns the number of replay menu items added
-static int ReplayMenuAddItems(int client, Menu menu)
+static void DisplayServerRecordsMenu(int client)
 {
-	int replaysAdded = 0;
-	int replayCount = g_ReplayInfoCache.Length;
-	int replayInfo[RP_CACHE_BLOCKSIZE];
-	char temp[32], indexString[4];
-	
-	menu.RemoveAllItems();
-	
-	for (int i = 0; i < replayCount; i++)
+	if (g_ReplayInfoCache == null)
 	{
-		IntToString(i, indexString, sizeof(indexString));
+		GOKZ_PrintToChat(client, true, "%t", "Replay Menu - No Records");
+		return;
+	}
+
+	Menu menu = new Menu(MenuHandler_ServerRecords);
+	menu.SetTitle("%T", "Replay Menu - Server Records - Title", client, gC_CurrentMap, gC_ModeNames[selectedReplayMode[client]]);
+
+	int added = 0;
+	int replayInfo[RP_CACHE_BLOCKSIZE];
+	char path[PLATFORM_MAX_PATH], info[48], display[192], courseLabel[16];
+	for (int i = 0; i < g_ReplayInfoCache.Length; i++)
+	{
 		g_ReplayInfoCache.GetArray(i, replayInfo);
-		if (replayInfo[1] != selectedReplayMode[client]) // Wrong mode!
+		if (replayInfo[1] != selectedReplayMode[client])
 		{
 			continue;
 		}
-		
-		if (replayInfo[0] == 0)
+
+		FormatNewServerReplayPath(path, sizeof(path), replayInfo[0], replayInfo[1], replayInfo[2], replayInfo[3]);
+		if (!FileExists(path))
 		{
-			FormatEx(temp, sizeof(temp), "Main %s", gC_TimeTypeNames[replayInfo[3]]);
+			continue;
 		}
-		else
+
+		float time;
+		char alias[MAX_NAME_LENGTH];
+		if (!ReadRunReplayMeta(path, time, alias, sizeof(alias)))
 		{
-			FormatEx(temp, sizeof(temp), "Bonus %d %s", replayInfo[0], gC_TimeTypeNames[replayInfo[3]]);
+			continue;
 		}
-		menu.AddItem(indexString, temp, ITEMDRAW_DEFAULT);
-		
-		replaysAdded++;
+
+		GetCourseLabel(replayInfo[0], courseLabel, sizeof(courseLabel));
+		FormatEx(display, sizeof(display), "%s - %s [%s %s]", alias, GOKZ_FormatTime(time), courseLabel, gC_TimeTypeNames[replayInfo[3]]);
+		FormatEx(info, sizeof(info), "S;%d;%d;%d;%d", replayInfo[0], replayInfo[1], replayInfo[2], replayInfo[3]);
+		menu.AddItem(info, display);
+		added++;
 	}
-	
-	return replaysAdded;
-} 
+
+	if (added == 0)
+	{
+		GOKZ_PrintToChat(client, true, "%t", "Replay Menu - No Records");
+		delete menu;
+		return;
+	}
+
+	menu.Display(client, MENU_TIME_FOREVER);
+}
+
+static void DisplayPersonalRecordsMenu(int client)
+{
+	int accountID = GetSteamAccountID(client);
+	if (accountID == 0)
+	{
+		GOKZ_PrintToChat(client, true, "%t", "Replay Menu - No Personal Replays");
+		return;
+	}
+
+	char playerDir[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, playerDir, sizeof(playerDir), "%s/%s/%d", RP_DIRECTORY_NEW_PLAYERS, gC_CurrentMap, accountID);
+	DirectoryListing dir = OpenDirectory(playerDir);
+	if (dir == null)
+	{
+		GOKZ_PrintToChat(client, true, "%t", "Replay Menu - No Personal Replays");
+		return;
+	}
+
+	Menu menu = new Menu(MenuHandler_PersonalRecords);
+	menu.SetTitle("%T", "Replay Menu - Personal Records - Title", client, gC_CurrentMap, gC_ModeNames[selectedReplayMode[client]]);
+
+	int added = 0;
+	char fileName[PLATFORM_MAX_PATH], path[PLATFORM_MAX_PATH], info[48], display[192], courseLabel[16];
+	while (dir.GetNext(fileName, sizeof(fileName)))
+	{
+		int course, mode, style, timeType;
+		if (!ParseRunReplayFileName(fileName, course, mode, style, timeType) || mode != selectedReplayMode[client])
+		{
+			continue;
+		}
+
+		BuildPath(Path_SM, path, sizeof(path), "%s/%s/%d/%s", RP_DIRECTORY_NEW_PLAYERS, gC_CurrentMap, accountID, fileName);
+		float time;
+		char alias[MAX_NAME_LENGTH];
+		if (!ReadRunReplayMeta(path, time, alias, sizeof(alias)))
+		{
+			continue;
+		}
+
+		GetCourseLabel(course, courseLabel, sizeof(courseLabel));
+		FormatEx(display, sizeof(display), "%s - %s [%s %s]", alias, GOKZ_FormatTime(time), courseLabel, gC_TimeTypeNames[timeType]);
+		FormatEx(info, sizeof(info), "P;%d;%d;%d;%d", course, mode, style, timeType);
+		menu.AddItem(info, display);
+		added++;
+	}
+
+	delete dir;
+
+	if (added == 0)
+	{
+		GOKZ_PrintToChat(client, true, "%t", "Replay Menu - No Personal Replays");
+		delete menu;
+		return;
+	}
+
+	menu.Display(client, MENU_TIME_FOREVER);
+}
+
+static void DisplayAllRecordsTypeMenu(int client)
+{
+	Menu menu = new Menu(MenuHandler_AllRecordsType);
+	menu.SetTitle("%T", "Replay Menu - All Records - Type - Title", client, gC_CurrentMap, gC_ModeNames[selectedReplayMode[client]]);
+
+	char display[32];
+	FormatEx(display, sizeof(display), "%s", gC_TimeTypeNames[TimeType_Pro]);
+	menu.AddItem("1", display);
+	FormatEx(display, sizeof(display), "%s", gC_TimeTypeNames[TimeType_Nub]);
+	menu.AddItem("0", display);
+
+	menu.Display(client, MENU_TIME_FOREVER);
+}
+
+static void DisplayAllRecordsMenu(int client)
+{
+	if (gB_PlayerReplayCacheDirty)
+	{
+		RebuildPlayerReplayCache();
+	}
+
+	int block[6];
+	ArrayList entries = new ArrayList(6);
+	for (int i = 0; i < g_PlayerReplayCache.Length; i++)
+	{
+		g_PlayerReplayCache.GetArray(i, block);
+		if (block[1] != selectedReplayMode[client] || block[3] != selectedReplayTimeType[client])
+		{
+			continue;
+		}
+		entries.PushArray(block);
+	}
+	entries.SortCustom(SortFunc_PlayerReplayByTime);
+
+	Menu menu = new Menu(MenuHandler_AllRecords);
+	menu.SetTitle("%T", "Replay Menu - All Records - Title", client, gC_CurrentMap, gC_ModeNames[selectedReplayMode[client]], gC_TimeTypeNames[selectedReplayTimeType[client]]);
+
+	int added = 0;
+	char path[PLATFORM_MAX_PATH], info[48], display[192], courseLabel[16], alias[MAX_NAME_LENGTH];
+	for (int i = 0; i < entries.Length; i++)
+	{
+		entries.GetArray(i, block);
+
+		FormatNewPlayerReplayPath(path, sizeof(path), block[4], block[0], block[1], block[2], block[3]);
+		if (!FileExists(path))
+		{
+			continue;
+		}
+
+		if (!g_PlayerReplayAliasCache.GetString(path, alias, sizeof(alias)))
+		{
+			float time;
+			if (!ReadRunReplayMeta(path, time, alias, sizeof(alias)))
+			{
+				continue;
+			}
+		}
+
+		GetCourseLabel(block[0], courseLabel, sizeof(courseLabel));
+		FormatEx(display, sizeof(display), "%s - %s [%s]", alias, GOKZ_FormatTime(view_as<float>(block[5])), courseLabel);
+		FormatEx(info, sizeof(info), "A;%d;%d;%d;%d;%d", block[4], block[0], block[1], block[2], block[3]);
+		menu.AddItem(info, display);
+		added++;
+	}
+
+	delete entries;
+
+	if (added == 0)
+	{
+		GOKZ_PrintToChat(client, true, "%t", "Replay Menu - No Records");
+		delete menu;
+		return;
+	}
+
+	menu.Display(client, MENU_TIME_FOREVER);
+}
+
+static bool LoadReplayFromInfo(int client, const char[] info)
+{
+	char pieces[6][16];
+	int count = ExplodeString(info, ";", pieces, sizeof(pieces), sizeof(pieces[]));
+
+	char path[PLATFORM_MAX_PATH];
+	if (StrEqual(pieces[0], "S") && count == 5)
+	{
+		FormatNewServerReplayPath(path, sizeof(path), StringToInt(pieces[1]), StringToInt(pieces[2]), StringToInt(pieces[3]), StringToInt(pieces[4]));
+	}
+	else if (StrEqual(pieces[0], "P") && count == 5)
+	{
+		int accountID = GetSteamAccountID(client);
+		if (accountID == 0)
+		{
+			return false;
+		}
+		FormatNewPlayerReplayPath(path, sizeof(path), accountID, StringToInt(pieces[1]), StringToInt(pieces[2]), StringToInt(pieces[3]), StringToInt(pieces[4]));
+	}
+	else if (StrEqual(pieces[0], "A") && count == 6)
+	{
+		FormatNewPlayerReplayPath(path, sizeof(path), StringToInt(pieces[1]), StringToInt(pieces[2]), StringToInt(pieces[3]), StringToInt(pieces[4]), StringToInt(pieces[5]));
+	}
+	else
+	{
+		return false;
+	}
+
+	if (!FileExists(path))
+	{
+		GOKZ_PrintToChat(client, true, "%t", "Replay Menu - No File");
+		return false;
+	}
+
+	return LoadReplayBot(client, path) != -1;
+}
+
+void GetCourseLabel(int course, char[] buffer, int maxlength)
+{
+	if (course == 0)
+	{
+		FormatEx(buffer, maxlength, "Main");
+	}
+	else
+	{
+		FormatEx(buffer, maxlength, "B%d", course);
+	}
+}
+
+
+

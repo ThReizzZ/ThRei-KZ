@@ -26,9 +26,9 @@
 
 public Plugin myinfo = 
 {
-	name = "GOKZ Replays", 
-	author = "DanZay", 
-	description = "Records runs to disk and allows playback using bots", 
+	name = "GOKZ Replays",
+	author = "ThRei",
+	description = "Records runs to disk and allows playback using bots",
 	version = GOKZ_VERSION, 
 	url = GOKZ_SOURCE_URL
 };
@@ -39,12 +39,20 @@ char gC_CurrentMap[64];
 int gI_CurrentMapFileSize;
 bool gB_HideNameChange;
 bool gB_NubRecordMissed[MAXPLAYERS + 1];
+bool gB_ProRecordMissed[MAXPLAYERS + 1];
 ArrayList g_ReplayInfoCache;
 Address gA_BotDuckAddr;
 int gI_BotDuckPatchRestore[40]; // Size of patched section in gamedata
 int gI_BotDuckPatchLength;
 
 DynamicDetour gH_DHooks_TeamFull;
+
+// New replay storage. Kept separate from the legacy directories so that
+// existing replay files are never read, written or displayed.
+#define RP_DIRECTORY_NEW "data/gokz-replays/_v3"
+#define RP_DIRECTORY_NEW_SERVER "data/gokz-replays/_v3/server"
+#define RP_DIRECTORY_NEW_PLAYERS "data/gokz-replays/_v3/players"
+#define RP_DIRECTORY_NEW_TEMP "data/gokz-replays/_v3/temp"
 
 #include "gokz-replays/commands.sp"
 #include "gokz-replays/nav.sp"
@@ -164,7 +172,7 @@ public Action HookTriggers(int entity, int other)
 	return Plugin_Continue;
 }
 
-public Action Hook_SayText2(UserMsg msg_id, any msg, const int[] players, int playersNum, bool reliable, bool init)
+public Action Hook_SayText2(UserMsg msg_id, Protobuf msg, const int[] players, int playersNum, bool reliable, bool init)
 {
 	// Name change supression
 	// Credit to shavit's simple bhop timer - https://github.com/shavitush/bhoptimer
@@ -174,8 +182,7 @@ public Action Hook_SayText2(UserMsg msg_id, any msg, const int[] players, int pl
 	}
 	
 	char msgName[24];
-	Protobuf pbmsg = msg;
-	pbmsg.ReadString("msg_name", msgName, sizeof(msgName));
+	msg.ReadString("msg_name", msgName, sizeof(msgName));
 	if (StrEqual(msgName, "#Cstrike_Name_Change"))
 	{
 		gB_HideNameChange = false;
@@ -197,6 +204,7 @@ public void OnClientPutInServer(int client)
 {
 	OnClientPutInServer_Playback(client);
 	OnClientPutInServer_Recording(client);
+	HookClientEvents(client);
 }
 
 public void OnClientAuthorized(int client, const char[] auth)
@@ -212,12 +220,18 @@ public void OnClientDisconnect(int client)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
 {
-	if (!IsFakeClient(client))
+	OnPlayerRunCmd_Recording(client);
+	if (IsFakeClient(client))
 	{
-		return Plugin_Continue;
+		OnPlayerRunCmd_Playback(client, buttons, vel, angles);
+		return Plugin_Changed;
 	}
-	OnPlayerRunCmd_Playback(client, buttons, vel, angles);
-	return Plugin_Changed;
+	return Plugin_Continue;
+}
+
+public void Hook_PlayerPostThinkPost(int client)
+{
+	Hook_PlayerPostThinkPost_Recording(client);
 }
 
 public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float vel[3], const float angles[3], int weapon, int subtype, int cmdnum, int tickcount, int seed, const int mouse[2])
@@ -241,6 +255,7 @@ public Action GOKZ_OnTimerStart(int client, int course)
 public void GOKZ_OnTimerStart_Post(int client, int course)
 {
 	gB_NubRecordMissed[client] = false;
+	gB_ProRecordMissed[client] = false;
 	GOKZ_OnTimerStart_Post_Recording(client);
 }
 
@@ -271,11 +286,14 @@ public void GOKZ_OnCountedTeleport_Post(int client)
 
 public void GOKZ_LR_OnRecordMissed(int client, float recordTime, int course, int mode, int style, int recordType)
 {
-	if (recordType == RecordType_Nub)
+	if (recordType == RecordType_Nub || recordType == RecordType_NubAndPro)
 	{
 		gB_NubRecordMissed[client] = true;
 	}
-	GOKZ_LR_OnRecordMissed_Recording(client, recordType);
+	if (recordType == RecordType_Pro || recordType == RecordType_NubAndPro)
+	{
+		gB_ProRecordMissed[client] = true;
+	}
 }
 
 public void GOKZ_AC_OnPlayerSuspected(int client, ACReason reason)
@@ -294,6 +312,11 @@ public void GOKZ_OnOptionsLoaded(int client)
 	{
 		GOKZ_OnOptionsLoaded_Playback(client);
 	}
+}
+
+public void GOKZ_OnOptionChanged(int client, const char[] option, any newValue)
+{
+	OnOptionChanged_ReplayControls(client, option, newValue);
 }
 
 // =====[ PRIVATE ]=====
@@ -323,6 +346,11 @@ static void HookEvents()
 		StoreToAddress(gA_BotDuckAddr + view_as<Address>(i), 0x90, NumberType_Int8);
 	}
 	delete gameData;
+}
+
+static void HookClientEvents(int client)
+{
+	SDKHook(client, SDKHook_PostThinkPost, Hook_PlayerPostThinkPost);
 }
 
 static void UpdateCurrentMap()

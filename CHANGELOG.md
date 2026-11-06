@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0
+
+- Added jumpstat PB history, per-strafe details, route visualization and jump replay upload
+- `gokz-global` now keeps the detailed GOKZ Jump data for the API and uploads jump PB replays
+- `GlobalAPI` adds `GlobalAPI_CreateJumpstatReplay`; existing requests are unchanged
+- Bundled the custom `ThReizzZ/replays` build with `GOKZ_RP_OnJumpReplaySaved`
+- Existing run replay storage, menus and playback behaviour are unchanged
+
 ## 2.0.2
 
 - GlobalAPI now uploads `player_name` with record submissions again, fixing "未知玩家" on the website after the 2.0.0 rebuild

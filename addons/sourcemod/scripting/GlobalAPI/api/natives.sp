@@ -19,6 +19,7 @@ void CreateNatives()
 	// Jumpstats
 	CreateNative("GlobalAPI_GetJumpstats", Native_GetJumpstats);
 	CreateNative("GlobalAPI_CreateJumpstat", Native_CreateJumpstat);
+	CreateNative("GlobalAPI_CreateJumpstatReplay", Native_CreateJumpstatReplay);
 	CreateNative("GlobalAPI_GetJumpstatTop", Native_GetJumpstatTop);
 	CreateNative("GlobalAPI_GetJumpstatTop30", Native_GetJumpstatTop30);
 
@@ -435,6 +436,57 @@ public int Native_CreateJumpstat(Handle plugin, int numParams)
 	FormatRequestUrl(requestUrl, sizeof(requestUrl), GlobalAPI_CreateJumpstat_Endpoint);
 
 	hData.AddEndpoint(requestUrl);
+	hData.AddUrl(requestUrl);
+
+	return GlobalAPI_SendRequest(hData);
+}
+
+// =========================================================== //
+
+/*
+	native bool GlobalAPI_CreateJumpstatReplay(OnAPICallFinished callback = INVALID_FUNCTION, any data = DEFAULT_DATA,
+												const char[] steamId, int jumpType, int mode, float distance,
+												int block, const char[] filePath)
+*/
+#define GlobalAPI_CreateJumpstatReplay_Endpoint "jumpstats/replay"
+public int Native_CreateJumpstatReplay(Handle plugin, int numParams)
+{
+	Function callback = GetNativeCell(1);
+	any data = GetNativeCell(2);
+
+	char steamId[GlobalAPI_Max_QueryParam_Length];
+	GetNativeString(3, steamId, sizeof(steamId));
+
+	int jumpType = GetNativeCell(4);
+	int mode = GetNativeCell(5);
+	float distance = GetNativeCell(6);
+	int block = GetNativeCell(7);
+
+	char replayPath[PLATFORM_MAX_PATH];
+	GetNativeString(8, replayPath, sizeof(replayPath));
+
+	GlobalAPIRequestData hData = CreateRequestData(plugin, callback, data);
+	hData.AddBodyFile(replayPath);
+
+	hData.KeyRequired = true;
+	hData.BodyLength = FileSize(replayPath);
+	hData.RequestType = GlobalAPIRequestType_POST;
+	hData.ContentType = GlobalAPIRequestContentType_OctetStream;
+
+	char endpoint[GlobalAPI_Max_QueryUrl_Length];
+	FormatEx(endpoint, sizeof(endpoint),
+		"%s?steam_id=%s&jump_type=%d&mode=%d&distance=%.4f&block=%d",
+		GlobalAPI_CreateJumpstatReplay_Endpoint,
+		steamId,
+		jumpType,
+		mode,
+		distance,
+		block);
+
+	char requestUrl[GlobalAPI_Max_QueryUrl_Length];
+	FormatRequestUrl(requestUrl, sizeof(requestUrl), endpoint);
+
+	hData.AddEndpoint(endpoint);
 	hData.AddUrl(requestUrl);
 
 	return GlobalAPI_SendRequest(hData);

@@ -302,6 +302,23 @@ native bool GlobalAPI_CreateJumpstat(OnAPICallFinished callback = INVALID_FUNCTI
 										bool isCrouchBind, bool isForwardBind, bool isCrouchBoost, int strafeCount);
 
 /**
+ * Starts a POST HTTP Request to /api/{version}/jumpstats/replay
+ *
+ * @param callback				Callback when request has finished
+ * @param data					Optional data to pass
+ * @param steamId				SteamID2 of the user
+ * @param jumpType				Type of the jump
+ * @param mode					Movement mode
+ * @param distance				Distance of the jump
+ * @param block					Block distance, or 0 for a normal jump
+ * @param filePath				Path to the GOKZ jump replay file
+ * @return						Whether request was successfully sent
+ */
+native bool GlobalAPI_CreateJumpstatReplay(OnAPICallFinished callback = INVALID_FUNCTION, any data = DEFAULT_DATA,
+											const char[] steamId, int jumpType, int mode, float distance, int block,
+											const char[] filePath);
+
+/**
  * Starts a GET HTTP Request to /api/{version}/jumpstats/{jump_type}/top
  *
  * @param callback				Callback when request has finished

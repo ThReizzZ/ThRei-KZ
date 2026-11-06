@@ -1,4 +1,5 @@
 static GlobalForward H_OnReplaySaved;
+static GlobalForward H_OnJumpReplaySaved;
 static GlobalForward H_OnReplayDiscarded;
 static GlobalForward H_OnTimerEnd_Post;
 
@@ -39,6 +40,7 @@ public int Native_RP_UpdateReplayControlMenu(Handle plugin, int numParams)
 void CreateGlobalForwards()
 {
 	H_OnReplaySaved = new GlobalForward("GOKZ_RP_OnReplaySaved", ET_Event, Param_Cell, Param_Cell, Param_String, Param_Cell, Param_Cell, Param_Float, Param_String, Param_Cell);
+	H_OnJumpReplaySaved = new GlobalForward("GOKZ_RP_OnJumpReplaySaved", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Float, Param_Cell, Param_String);
 	H_OnReplayDiscarded = new GlobalForward("GOKZ_RP_OnReplayDiscarded", ET_Ignore, Param_Cell);
 	H_OnTimerEnd_Post = new GlobalForward("GOKZ_RP_OnTimerEnd_Post", ET_Ignore, Param_Cell, Param_String, Param_Cell, Param_Float, Param_Cell);
 }
@@ -57,6 +59,19 @@ Action Call_OnReplaySaved(int client, int replayType, const char[] map, int cour
 	Call_PushCell(tempReplay);
 	Call_Finish(result);
 	return result;
+}
+
+void Call_OnJumpReplaySaved(int client, int jumpType, int mode, int style, float distance, int block, const char[] filePath)
+{
+	Call_StartForward(H_OnJumpReplaySaved);
+	Call_PushCell(client);
+	Call_PushCell(jumpType);
+	Call_PushCell(mode);
+	Call_PushCell(style);
+	Call_PushFloat(distance);
+	Call_PushCell(block);
+	Call_PushString(filePath);
+	Call_Finish();
 }
 
 void Call_OnReplayDiscarded(int client)

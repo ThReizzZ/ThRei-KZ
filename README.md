@@ -10,6 +10,7 @@ ThRei KZ 的 CS:GO GOKZ 服务端插件包。基线为 **GOKZ 3.6.4 + SourceMod 
 - `!pb` / `!gpb` / `!gmaptop` / `!profile` / `!wr`
 - TP / PRO 分开计分和排名
 - 地图过滤、封禁、回放、公告
+- 跳跃 PB 历史、strafe 明细、路线可视化与跳跃回放上传
 - 红色 `CN` 前缀 + ThRei 段位
 - 计分板模式首字母 `K` / `S` / `V` + 完整段位
 - 计分板 clan tag 格式可配置
@@ -38,7 +39,7 @@ https://github.com/ThReizzZ/ThRei-KZ/releases/latest
 ```
 
 ```text
-https://github.com/ThReizzZ/ThRei-KZ/releases/download/v2.0.2/threi-kz-full.tar.gz
+https://github.com/ThReizzZ/ThRei-KZ/releases/download/v2.1.0/threi-kz-full.tar.gz
 ```
 
 只提供一个完整安装包，包含所有 GOKZ 插件、GlobalAPI 桥接、翻译、gamedata、cfg、materials、models、sound，以及 `maps/gokz-replays.nav`。
