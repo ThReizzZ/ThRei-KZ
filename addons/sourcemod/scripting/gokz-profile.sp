@@ -30,6 +30,7 @@ int gI_Rank[MAXPLAYERS + 1][MODE_COUNT];
 bool gB_Localranks;
 bool gB_Chat;
 ConVar gCV_ThReiClanFormat;
+ConVar gCV_ThReiOwnerSteamIds;
 char gC_ThReiModeInitials[MODE_COUNT][] = {
 	"V",
 	"S",
@@ -61,6 +62,11 @@ public void OnPluginStart()
 		"sm_threi_clan_format",
 		"[{mode_initial} CN {rank}]",
 		"Scoreboard clan tag format. Placeholders: {cn}, {rank}, {mode}, {mode_short}, {mode_initial}. CS:GO shows at most 15 characters; outer brackets are dropped automatically if needed."
+	);
+	gCV_ThReiOwnerSteamIds = AutoExecConfig_CreateConVar(
+		"sm_threi_owner_steamids",
+		"",
+		"Comma-separated SteamID64s that display the Owner tag instead of the normal rank."
 	);
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -183,6 +189,31 @@ public void GOKZ_GL_OnPointsUpdated(int client, int mode)
 	Profile_OnPointsUpdated(client, mode);
 }
 
+bool IsThReiOwner(int client)
+{
+	char configured[256];
+	gCV_ThReiOwnerSteamIds.GetString(configured, sizeof(configured));
+	TrimString(configured);
+	if (configured[0] == '\0')
+	{
+		return false;
+	}
+
+	char steamid[32];
+	if (!GetClientAuthId(client, AuthId_SteamID64, steamid, sizeof(steamid)))
+	{
+		return false;
+	}
+
+	char haystack[260];
+	FormatEx(haystack, sizeof(haystack), ",%s,", configured);
+	ReplaceString(haystack, sizeof(haystack), " ", "", true);
+
+	char needle[40];
+	FormatEx(needle, sizeof(needle), ",%s,", steamid);
+	return StrContains(haystack, needle, false) != -1;
+}
+
 public void UpdateRank(int client, int mode)
 {
 	if (!IsValidClient(client) || IsFakeClient(client))
@@ -190,7 +221,7 @@ public void UpdateRank(int client, int mode)
 		return;
 	}
 
-	int tagType = GetAvailableTagTypeOrDefault(client);
+	int tagType = IsThReiOwner(client) ? ProfileTagType_Rank : GetAvailableTagTypeOrDefault(client);
 
 	if (tagType != ProfileTagType_Rank)
 	{
@@ -261,6 +292,16 @@ public void UpdateRank(int client, int mode)
 
 void UpdateTags(int client, int rank, int mode)
 {
+	if (IsThReiOwner(client))
+	{
+		CS_SetClientClanTag(client, "Owner");
+		if (gB_Chat)
+		{
+			GOKZ_CH_SetChatTag(client, "Owner", "{gold}");
+		}
+		return;
+	}
+
 	if (rank != -1 &&
 		GOKZ_GetOption(client, gC_ProfileOptionNames[ProfileOption_ShowRankClanTag]) == ProfileOptionBool_Enabled)
 	{
