@@ -30,7 +30,6 @@ public Plugin myinfo =
 bool gB_GOKZLocalDB;
 bool gB_SourceBansPP;
 bool gB_SourceBans;
-bool gB_GOKZGlobal;
 
 Handle gH_DHooks_OnTeleport;
 
@@ -56,6 +55,7 @@ bool gB_BindExceptionPostPending[MAXPLAYERS + 1];
 ConVar gCV_gokz_autoban;
 ConVar gCV_gokz_autoban_duration_bhop_hack;
 ConVar gCV_gokz_autoban_duration_bhop_macro;
+ConVar gCV_ThReiAnticheatBanMessage;
 ConVar gCV_sv_autobunnyhopping;
 
 #include "gokz-anticheat/api.sp"
@@ -90,7 +90,6 @@ public void OnAllPluginsLoaded()
 	gB_GOKZLocalDB = LibraryExists("gokz-localdb");
 	gB_SourceBansPP = LibraryExists("sourcebans++");
 	gB_SourceBans = LibraryExists("sourcebans");
-	gB_GOKZGlobal = LibraryExists("gokz-global");
 	
 	for (int client = 1; client <= MaxClients; client++)
 	{
@@ -106,7 +105,6 @@ public void OnLibraryAdded(const char[] name)
 	gB_GOKZLocalDB = gB_GOKZLocalDB || StrEqual(name, "gokz-localdb");
 	gB_SourceBansPP = gB_SourceBansPP || StrEqual(name, "sourcebans++");
 	gB_SourceBans = gB_SourceBans || StrEqual(name, "sourcebans");
-	gB_GOKZGlobal = gB_GOKZGlobal || StrEqual(name, "gokz-global");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -114,7 +112,6 @@ public void OnLibraryRemoved(const char[] name)
 	gB_GOKZLocalDB = gB_GOKZLocalDB && !StrEqual(name, "gokz-localdb");
 	gB_SourceBansPP = gB_SourceBansPP && !StrEqual(name, "sourcebans++");
 	gB_SourceBans = gB_SourceBans && !StrEqual(name, "sourcebans");
-	gB_GOKZGlobal = gB_GOKZGlobal && !StrEqual(name, "gokz-global");
 }
 
 
@@ -218,6 +215,11 @@ static void CreateConVars()
 		true, 
 		0.0);
 	
+	gCV_ThReiAnticheatBanMessage = AutoExecConfig_CreateConVar(
+		"sm_threi_anticheat_ban_message",
+		"Banned for {reason}. Visit https://kz.threi.cn/bans for details.",
+		"Message shown when anticheat kicks a player. {reason} is replaced with 'bhop hack' or 'bhop macro'.");
+	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
@@ -259,19 +261,20 @@ static void LogSuspicion(int client, ACReason reason, const char[] notes, const 
 
 static void BanSuspect(int client, ACReason reason)
 {
-	char banMessage[128];
-	char redirectString[64] = "Contact the server administrator for more info";
-	
-	if (gB_GOKZGlobal)
+	char message[192];
+	char banMessage[256];
+	gCV_ThReiAnticheatBanMessage.GetString(message, sizeof(message));
+	if (message[0] == '\0')
 	{
-		redirectString = "Visit http://rules.global-api.com/ for more info";
+		strcopy(message, sizeof(message), "Banned for {reason}. Visit https://kz.threi.cn/bans for details.");
 	}
 	
 	switch (reason)
 	{
 		case ACReason_BhopHack:
 		{
-			FormatEx(banMessage, sizeof(banMessage), "You have been banned for using a %s.\n%s", "bhop hack", redirectString);
+			FormatEx(banMessage, sizeof(banMessage), "%s", message);
+			ReplaceString(banMessage, sizeof(banMessage), "{reason}", "bhop hack", false);
 			AutoBanClient(
 				client, 
 				gCV_gokz_autoban_duration_bhop_hack.IntValue, 
@@ -280,7 +283,8 @@ static void BanSuspect(int client, ACReason reason)
 		}
 		case ACReason_BhopMacro:
 		{
-			FormatEx(banMessage, sizeof(banMessage), "You have been banned for using a %s.\n%s", "bhop macro", redirectString);
+			FormatEx(banMessage, sizeof(banMessage), "%s", message);
+			ReplaceString(banMessage, sizeof(banMessage), "{reason}", "bhop macro", false);
 			AutoBanClient(
 				client, 
 				gCV_gokz_autoban_duration_bhop_macro.IntValue, 
