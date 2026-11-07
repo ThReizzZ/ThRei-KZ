@@ -18,10 +18,18 @@ void GlobalBanPlayer(int client, ACReason reason, const char[] notes, const char
 	dp.WriteString(playerName);
 	dp.WriteString(steamid);
 	
+	ConVar durationConVar;
 	switch (reason)
 	{
-		case ACReason_BhopHack:GlobalAPI_CreateBan(BanPlayerCallback, dp, steamid, "bhop_hack", stats, notes, ip);
-		case ACReason_BhopMacro:GlobalAPI_CreateBan(BanPlayerCallback, dp, steamid, "bhop_macro", stats, notes, ip);
+		case ACReason_BhopHack: durationConVar = FindConVar("gokz_autoban_duration_bhop_hack");
+		case ACReason_BhopMacro: durationConVar = FindConVar("gokz_autoban_duration_bhop_macro");
+	}
+	int durationMinutes = durationConVar != null ? durationConVar.IntValue : 0;
+	
+	switch (reason)
+	{
+		case ACReason_BhopHack:GlobalAPI_CreateBanEx(BanPlayerCallback, dp, steamid, "bhop_hack", stats, notes, ip, durationMinutes);
+		case ACReason_BhopMacro:GlobalAPI_CreateBanEx(BanPlayerCallback, dp, steamid, "bhop_macro", stats, notes, ip, durationMinutes);
 	}
 }
 

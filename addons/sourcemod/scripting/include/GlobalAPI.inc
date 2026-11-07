@@ -247,6 +247,23 @@ native bool GlobalAPI_CreateBan(OnAPICallFinished callback = INVALID_FUNCTION, a
 									const char[] notes, const char[] ipAddress);
 
 /**
+ * Starts a POST HTTP Request to /api/{version}/bans with a duration.
+ *
+ * @param callback				Callback when request has finished
+ * @param data					Optional data to pass
+ * @param steamId				SteamID2 of the user
+ * @param banType				Type of the ban
+ * @param stats					Stats of the ban
+ * @param notes					Notes of the ban
+ * @param ipAddress				IP address of the user
+ * @param durationMinutes		Ban duration in minutes; 0 means permanent
+ * @return						Whether request was successfully sent
+ */
+native bool GlobalAPI_CreateBanEx(OnAPICallFinished callback = INVALID_FUNCTION, any data = DEFAULT_DATA,
+									const char[] steamId, const char[] banType, const char[] stats,
+									const char[] notes, const char[] ipAddress, int durationMinutes = 0);
+
+/**
  * Starts a GET HTTP Request to /api/{version}/jumpstats
  *
  * @param callback				Callback when request has finished
@@ -790,6 +807,7 @@ public void __pl_GlobalAPI_SetNTVOptional()
 	// Bans
 	MarkNativeAsOptional("GlobalAPI_GetBans");
 	MarkNativeAsOptional("GlobalAPI_CreateBan");
+	MarkNativeAsOptional("GlobalAPI_CreateBanEx");
 
 	// Jumpstats
 	MarkNativeAsOptional("GlobalAPI_GetJumpstats");

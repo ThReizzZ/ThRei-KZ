@@ -15,6 +15,7 @@ void CreateNatives()
 	// Bans
 	CreateNative("GlobalAPI_GetBans", Native_GetBans);
 	CreateNative("GlobalAPI_CreateBan", Native_CreateBan);
+	CreateNative("GlobalAPI_CreateBanEx", Native_CreateBanEx);
 
 	// Jumpstats
 	CreateNative("GlobalAPI_GetJumpstats", Native_GetJumpstats);
@@ -292,6 +293,57 @@ public int Native_CreateBan(Handle plugin, int numParams)
 
 	char requestUrl[GlobalAPI_Max_QueryUrl_Length];
 	FormatRequestUrl(requestUrl, sizeof(requestUrl), GlobalAPI_CreateBan_Endpoint);
+
+	hData.AddEndpoint(requestUrl);
+	hData.AddUrl(requestUrl);
+
+	return GlobalAPI_SendRequest(hData);
+}
+
+// =========================================================== //
+
+/*
+	native bool GlobalAPI_CreateBanEx(OnAPICallFinished callback = INVALID_FUNCTION, any data = INVALID_HANDLE,
+										char[] steamId, char[] banType, char[] stats, char[] notes, char[] ip,
+										int durationMinutes = 0)
+*/
+#define GlobalAPI_CreateBanEx_Endpoint "bans"
+public int Native_CreateBanEx(Handle plugin, int numParams)
+{
+	Function callback = GetNativeCell(1);
+	any data = GetNativeCell(2);
+
+	char steamId[GlobalAPI_Max_QueryParam_Length];
+	GetNativeString(3, steamId, sizeof(steamId));
+
+	char banType[GlobalAPI_Max_QueryParam_Length];
+	GetNativeString(4, banType, sizeof(banType));
+
+	char stats[GlobalAPI_Max_QueryParam_Length * 8];
+	GetNativeString(5, stats, sizeof(stats));
+
+	char notes[GlobalAPI_Max_QueryParam_Length * 16];
+	GetNativeString(6, notes, sizeof(notes));
+
+	char ip[GlobalAPI_Max_QueryParam_Length];
+	GetNativeString(7, ip, sizeof(ip));
+
+	int durationMinutes = numParams >= 8 ? GetNativeCell(8) : 0;
+
+	GlobalAPIRequestData hData = CreateRequestData(plugin, callback, data);
+	hData.AddString("steam_id", steamId);
+	hData.AddString("ban_type", banType);
+	hData.AddString("stats", stats);
+	hData.AddString("notes", notes);
+	hData.AddString("ip", ip);
+	hData.AddNum("duration_minutes", durationMinutes);
+
+	hData.BodyLength = 2048;
+	hData.KeyRequired = true;
+	hData.RequestType = GlobalAPIRequestType_POST;
+
+	char requestUrl[GlobalAPI_Max_QueryUrl_Length];
+	FormatRequestUrl(requestUrl, sizeof(requestUrl), GlobalAPI_CreateBanEx_Endpoint);
 
 	hData.AddEndpoint(requestUrl);
 	hData.AddUrl(requestUrl);
