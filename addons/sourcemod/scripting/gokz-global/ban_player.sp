@@ -24,7 +24,9 @@ void GlobalBanPlayer(int client, ACReason reason, const char[] notes, const char
 		case ACReason_BhopHack: durationConVar = FindConVar("gokz_autoban_duration_bhop_hack");
 		case ACReason_BhopMacro: durationConVar = FindConVar("gokz_autoban_duration_bhop_macro");
 	}
-	int durationMinutes = durationConVar != null ? durationConVar.IntValue : 0;
+	int durationMinutes = durationConVar != null
+		? durationConVar.IntValue
+		: (reason == ACReason_BhopMacro ? 43200 : 0);
 	
 	switch (reason)
 	{
