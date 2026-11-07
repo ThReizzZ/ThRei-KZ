@@ -105,7 +105,6 @@ public void OnPluginStart()
 	CreateConVars();
 	CreateGlobalForwards();
 	RegisterCommands();
-	OnPluginStart_JumpstatDetails();
 }
 
 public void OnAllPluginsLoaded()

@@ -59,7 +59,7 @@ public void GOKZ_DB_OnJumpstatPB(
 	info.Encode(json, sizeof(json));
 	delete info;
 
-	bool sent = GlobalAPI_CreateJumpstat(
+	GlobalAPI_CreateJumpstat(
 		INVALID_FUNCTION,
 		0,
 		steamid,
@@ -72,8 +72,6 @@ public void GOKZ_DB_OnJumpstatPB(
 		false,
 		false,
 		strafes);
-
-	LogMessage("[ThReiJump] upload json_len=%d sent=%d", strlen(json), sent);
 }
 
 public void GOKZ_RP_OnJumpReplaySaved(
