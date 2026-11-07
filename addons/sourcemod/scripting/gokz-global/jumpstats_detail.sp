@@ -8,7 +8,7 @@
 */
 
 #define RECENT_JUMP_COUNT 8
-#define THREI_JUMPSTAT_DETAIL_BUILD "2026-11-07T22:32+08"
+#define THREI_JUMPSTAT_DETAIL_BUILD "2026-11-07T22:50+08"
 
 static ConVar gCV_JumpstatDetailDebug;
 static Jump g_RecentJumps[MAXPLAYERS + 1][RECENT_JUMP_COUNT];
