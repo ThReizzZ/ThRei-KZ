@@ -53,6 +53,8 @@ void AddJumpstatDetails(
 	info.SetInt("crouch_ticks", g_LastJump[client].crouchTicks);
 	info.SetInt("overlap", g_LastJump[client].overlap);
 	info.SetInt("deadair", g_LastJump[client].deadair);
+	info.SetInt("release_w", g_LastJump[client].releaseW);
+	info.SetInt("airtime_ticks", g_LastJump[client].duration);
 
 	JSON_Object strafes = new JSON_Object(true);
 	int count = g_LastJump[client].strafes;
