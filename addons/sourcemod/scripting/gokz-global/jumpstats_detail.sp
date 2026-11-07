@@ -8,7 +8,7 @@
 */
 
 #define RECENT_JUMP_COUNT 8
-#define THREI_JUMPSTAT_DETAIL_BUILD "2026-11-07T22:25+08"
+#define THREI_JUMPSTAT_DETAIL_BUILD "2026-11-07T22:32+08"
 
 static ConVar gCV_JumpstatDetailDebug;
 static Jump g_RecentJumps[MAXPLAYERS + 1][RECENT_JUMP_COUNT];
@@ -156,9 +156,14 @@ void AddJumpstatDetails(
 	{
 		int index = (gI_RecentJumpIndex[client] - offset + RECENT_JUMP_COUNT) % RECENT_JUMP_COUNT;
 
+		// A non-block PB (block == 0) can come from the same jump that GOKZ
+		// also recorded with a map block. Only compare the block number for
+		// actual block PBs.
+		bool blockMatches = block == 0 || g_RecentJumps[client][index].block == block;
+
 		if (g_RecentJumps[client][index].type != jumptype
 			|| gI_RecentJumpModes[client][index] != mode
-			|| g_RecentJumps[client][index].block != block
+			|| !blockMatches
 			|| FloatAbs(g_RecentJumps[client][index].distance - distance) > 0.1)
 		{
 			continue;
