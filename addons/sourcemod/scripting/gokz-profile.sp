@@ -314,7 +314,7 @@ void UpdateTags(int client, int rank, int mode)
 {
 	if (IsThReiOwner(client))
 	{
-		CS_SetClientClanTag(client, "Owner");
+		CS_SetClientClanTag(client, "[Owner]");
 		if (gB_Chat)
 		{
 			GOKZ_CH_SetChatTag(client, "Owner", "{gold}");
