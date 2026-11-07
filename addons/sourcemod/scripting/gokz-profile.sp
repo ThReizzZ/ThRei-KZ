@@ -4,10 +4,10 @@
 
 #include <gokz/core>
 #include <gokz/profile>
-#include <gokz/global>
 
 #undef REQUIRE_EXTENSIONS
 #undef REQUIRE_PLUGIN
+#include <gokz/global>
 #include <gokz/chat>
 
 #include <autoexecconfig>
@@ -29,6 +29,7 @@ public Plugin myinfo =
 int gI_Rank[MAXPLAYERS + 1][MODE_COUNT];
 bool gB_Localranks;
 bool gB_Chat;
+bool gB_Global;
 ConVar gCV_ThReiClanFormat;
 ConVar gCV_ThReiOwnerSteamIds;
 char gC_ThReiModeInitials[MODE_COUNT][] = {
@@ -79,6 +80,7 @@ public void OnAllPluginsLoaded()
 {
 	gB_Localranks = LibraryExists("gokz-localranks");
 	gB_Chat = LibraryExists("gokz-chat");
+	gB_Global = LibraryExists("gokz-global");
 
 	for (int client = 1; client <= MaxClients; client++)
 	{
@@ -99,12 +101,14 @@ public void OnLibraryAdded(const char[] name)
 {
 	gB_Localranks = gB_Localranks || StrEqual(name, "gokz-localranks");
 	gB_Chat = gB_Chat || StrEqual(name, "gokz-chat");
+	gB_Global = gB_Global || StrEqual(name, "gokz-global");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
 	gB_Localranks = gB_Localranks && !StrEqual(name, "gokz-localranks");
 	gB_Chat = gB_Chat && !StrEqual(name, "gokz-chat");
+	gB_Global = gB_Global && !StrEqual(name, "gokz-global");
 }
 
 
@@ -161,6 +165,15 @@ public void OnClientConnected(int client)
 		gI_Rank[client][mode] = 0;
 	}
 	Profile_OnClientConnected(client);
+}
+
+public void OnClientCookiesCached(int client)
+{
+	if (IsValidClient(client) && !IsFakeClient(client))
+	{
+		int mode = GOKZ_GetCoreOption(client, Option_Mode);
+		UpdateRank(client, mode);
+	}
 }
 
 public void OnClientDisconnect(int client)
@@ -259,6 +272,13 @@ public void UpdateRank(int client, int mode)
 		}
 		return;
 	}
+
+	// If gokz-global is not loaded, just set basic tags without rank
+    if (!gB_Global)
+    {
+        UpdateTags(client, -1, mode);
+        return;
+    }
 
 	int points = GOKZ_GL_GetRankPoints(client, mode);
 	int rank;
