@@ -8,7 +8,7 @@
 */
 
 #define RECENT_JUMP_COUNT 8
-#define THREI_JUMPSTAT_DETAIL_BUILD "2026-11-07T22:20+08"
+#define THREI_JUMPSTAT_DETAIL_BUILD "2026-11-07T22:25+08"
 
 static ConVar gCV_JumpstatDetailDebug;
 static Jump g_RecentJumps[MAXPLAYERS + 1][RECENT_JUMP_COUNT];
@@ -62,7 +62,43 @@ static void CacheJumpDetails(Jump jump)
 
 	int mode = GOKZ_GetCoreOption(client, Option_Mode);
 	int slot = gI_RecentJumpIndex[client];
-	g_RecentJumps[client][slot] = jump;
+
+	// Copy field by field. Whole-struct assignment to an array element has
+	// not been reliable here, which left the cached distance at 0.
+	g_RecentJumps[client][slot].jumper = jump.jumper;
+	g_RecentJumps[client][slot].block = jump.block;
+	g_RecentJumps[client][slot].crouchRelease = jump.crouchRelease;
+	g_RecentJumps[client][slot].crouchTicks = jump.crouchTicks;
+	g_RecentJumps[client][slot].deadair = jump.deadair;
+	g_RecentJumps[client][slot].duration = jump.duration;
+	g_RecentJumps[client][slot].originalType = jump.originalType;
+	g_RecentJumps[client][slot].overlap = jump.overlap;
+	g_RecentJumps[client][slot].releaseW = jump.releaseW;
+	g_RecentJumps[client][slot].strafes = jump.strafes;
+	g_RecentJumps[client][slot].type = jump.type;
+	g_RecentJumps[client][slot].deviation = jump.deviation;
+	g_RecentJumps[client][slot].distance = jump.distance;
+	g_RecentJumps[client][slot].edge = jump.edge;
+	g_RecentJumps[client][slot].height = jump.height;
+	g_RecentJumps[client][slot].maxSpeed = jump.maxSpeed;
+	g_RecentJumps[client][slot].offset = jump.offset;
+	g_RecentJumps[client][slot].preSpeed = jump.preSpeed;
+	g_RecentJumps[client][slot].sync = jump.sync;
+	g_RecentJumps[client][slot].width = jump.width;
+	g_RecentJumps[client][slot].miss = jump.miss;
+
+	for (int i = 0; i < JS_MAX_TRACKED_STRAFES; i++)
+	{
+		g_RecentJumps[client][slot].strafes_gainTicks[i] = jump.strafes_gainTicks[i];
+		g_RecentJumps[client][slot].strafes_deadair[i] = jump.strafes_deadair[i];
+		g_RecentJumps[client][slot].strafes_overlap[i] = jump.strafes_overlap[i];
+		g_RecentJumps[client][slot].strafes_ticks[i] = jump.strafes_ticks[i];
+		g_RecentJumps[client][slot].strafes_gain[i] = jump.strafes_gain[i];
+		g_RecentJumps[client][slot].strafes_loss[i] = jump.strafes_loss[i];
+		g_RecentJumps[client][slot].strafes_sync[i] = jump.strafes_sync[i];
+		g_RecentJumps[client][slot].strafes_width[i] = jump.strafes_width[i];
+	}
+
 	gI_RecentJumpModes[client][slot] = mode;
 	gI_RecentJumpIndex[client] = (slot + 1) % RECENT_JUMP_COUNT;
 	if (gI_RecentJumpCount[client] < RECENT_JUMP_COUNT)
@@ -94,6 +130,27 @@ void AddJumpstatDetails(
 {
 	info.SetString("detail_build", THREI_JUMPSTAT_DETAIL_BUILD);
 	info.SetInt("detail_cache", gI_RecentJumpCount[client]);
+
+	// Diagnostic snapshot of the cache, visible in the API's raw payload log.
+	char recent[700];
+	recent[0] = '\0';
+	for (int offset = 1; offset <= gI_RecentJumpCount[client]; offset++)
+	{
+		int index = (gI_RecentJumpIndex[client] - offset + RECENT_JUMP_COUNT) % RECENT_JUMP_COUNT;
+		char item[80];
+		FormatEx(
+			item,
+			sizeof(item),
+			"%s#%d t%d m%d b%d d%.4f",
+			offset == 1 ? "" : " | ",
+			offset,
+			g_RecentJumps[client][index].type,
+			gI_RecentJumpModes[client][index],
+			g_RecentJumps[client][index].block,
+			g_RecentJumps[client][index].distance);
+		StrCat(recent, sizeof(recent), item);
+	}
+	info.SetString("detail_recent", recent);
 
 	for (int offset = 1; offset <= gI_RecentJumpCount[client]; offset++)
 	{
